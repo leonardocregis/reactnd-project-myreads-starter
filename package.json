@@ -2,7 +2,8 @@
   "dependencies": {
     "prop-types": "^15.5.8",
     "react": "^15.5.4",
-    "react-dom": "^15.5.4"
+    "react-dom": "^15.5.4",
+    "react-router-dom": "^4.2.2"
   },
   "devDependencies": {
     "react-scripts": "0.9.5"
@@ -12,5 +13,23 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "name": "books-stars-sharing",
+  "description": "Booking sharing app, let you put your opinion onto books and share them",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leonardocregis/reactnd-project-myreads-starter.git"
+  },
+  "keywords": [
+    "react",
+    "books"
+  ],
+  "author": "LeonardoCRegis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leonardocregis/reactnd-project-myreads-starter/issues"
+  },
+  "homepage": "https://github.com/leonardocregis/reactnd-project-myreads-starter#readme"
 }
