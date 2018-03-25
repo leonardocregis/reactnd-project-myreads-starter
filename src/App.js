@@ -1,6 +1,6 @@
 import React from 'react';
 // import * as BooksAPI from './BooksAPI'
-import Wardrobe from './Wardrobe';
+import BookWardrobe from './BookWardrobe';
 import {Route} from 'react-router-dom';
 import './App.css';
 import BookSearcher from './BookSearcher';
@@ -41,8 +41,29 @@ class BooksApp extends React.Component {
         authors:"Mark Twain",
         imageURL:"http://books.google.com/books/content?id=32haAAAAMAAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE72yckZ5f5bDFVIf7BGPbjA0KYYtlQ__nWB-hI_YZmZ-fScYwFy4O_fWOcPwf-pgv3pPQNJP_sT5J_xOUciD8WaKmevh1rUR-1jk7g1aCD_KeJaOpjVu0cm_11BBIUXdxbFkVMdi&source=gbs_api"
         }]
-    }
+    
+    
+    },
+    bookActions:[
+      {  
+        text:"Currently Reading",
+        handler: () => console.log('Called CurrentlyReading')
+      },
+      {  
+        text:"Want to Read",
+        handler: () => console.log('Called wantToRead')
+      },
+      {  
+        text:"read",
+        handler: () => console.log('Called read')
+      },
+      {  
+        text:"none",
+        handler: () => alert('Called none')
+      }
+    ]
   }
+
   render() {
 
     return (
@@ -52,9 +73,10 @@ class BooksApp extends React.Component {
             />
           )}/>
           <Route exact path="/" render={() =>(
-            <Wardrobe
+            <BookWardrobe
               title="My reads"
               books={this.state.bookLists}
+              bookActions={this.state.bookActions}
             />
             )}
           />

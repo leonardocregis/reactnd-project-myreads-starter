@@ -2,8 +2,9 @@ import React from 'react';
 import BookShelf from './BookShelf';
 import {Link} from 'react-router-dom';
 
-function Wardrobe(props) {
+function BookWardrobe(props) {
     const {reading, wantToRead, read} = props.books;
+    const bookActions = props.bookActions;
     return (
         <div className="list-books">
             <div className="list-books-title">
@@ -14,14 +15,17 @@ function Wardrobe(props) {
                 <BookShelf 
                  title="Currently Reading"
                  books={reading}
+                 bookActions={bookActions}
                 />
                 <BookShelf 
                  title="Want to Read"
                  books={wantToRead}
+                 bookActions={bookActions}
                 />                
                 <BookShelf
                  title="Read"
                  books={read}
+                 bookActions={bookActions}
                 />
             </div>
             </div>
@@ -33,4 +37,4 @@ function Wardrobe(props) {
     );
 };
 
-export default Wardrobe;
+export default BookWardrobe;

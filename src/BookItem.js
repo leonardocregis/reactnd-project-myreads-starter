@@ -12,7 +12,9 @@ function BookItem(props) {
                     backgroundImage: urlImage
                     }}>
                 </div>
-                <BookActionsManager/>
+                <BookActionsManager
+                    actions={props.bookActions}
+                />
             </div>
             <div className="book-title">{props.title}</div>
             <div className="book-authors">{props.authors}</div>

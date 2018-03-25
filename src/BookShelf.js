@@ -10,10 +10,15 @@ function BookShelf(props) {
         bookShelfTitle = 'Undefined';
     }
     if (props.books)
-    books = props.books;
+      books = props.books;
     else {
         books = [];
     }
+    let bookActions;
+    if (props.bookActions)
+      bookActions = props.bookActions;
+    else 
+      bookActions = [];
     return (
         <div className="bookshelf">
         <h2 className="bookshelf-title">{bookShelfTitle}</h2>
@@ -27,6 +32,7 @@ function BookShelf(props) {
                         title={book.title}
                         authors={book.author}
                         imageURL={book.imageURL}
+                        bookActions={bookActions}
                      />
                     </li>
                 )
