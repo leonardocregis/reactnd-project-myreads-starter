@@ -2,9 +2,7 @@ import React from 'react';
 import BookActionsManager from './BookActionsManager';
 
 function BookItem(props) {
-    
     const urlImage = 'url("'+props.imageURL+'")';
-    console.log(urlImage);
     return (
         <div className="book">
             <div className="book-top">
