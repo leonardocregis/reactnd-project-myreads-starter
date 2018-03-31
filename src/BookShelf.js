@@ -1,40 +1,29 @@
 import React from 'react';
 import BookItem from './BookItem';
 
-function BookShelf(props) { 
-    let bookShelfTitle;
-    let books;
-    if (props.title)
-    bookShelfTitle = props.title;
-    else {
-        bookShelfTitle = 'Undefined';
-    }
-    if (props.books)
-      books = props.books;
-    else {
-        books = [];
-    }
-    let bookActions;
-    if (props.bookActions)
-      bookActions = props.bookActions;
-    else 
-      bookActions = [];
+class BookShelf extends React.Component {
+
+
+  render() {
+    const shelf = this.props.shelf;
+    const changeShelf = this.props.changeShelf;
     return (
-        <div className="bookshelf">
-        <h2 className="bookshelf-title">{bookShelfTitle}</h2>
+      <div className="bookshelf">
+        <h2 className="bookshelf-title">{shelf.title}</h2>
         <div className="bookshelf-books">
           <ol className="books-grid">
             {
-              books.map(book => {
+              shelf.books.map( book => {
                 return (
-                    <li key={book.title}>
-                      <BookItem 
-                        title={book.title}
-                        authors={book.author}
-                        imageURL={book.imageURL}
-                        bookActions={bookActions}
-                     />
-                    </li>
+                  <li key={book.title}>
+                    <BookItem
+                      imageURL={book.imageURL}
+                      title={book.title}
+                      authors={book.authors}
+                      availableActions={this.props.availableActions}
+                      changeShelf={changeShelf}
+                    />
+                  </li>
                 )
               })
             }
@@ -42,5 +31,7 @@ function BookShelf(props) {
         </div>
       </div>
     );
+  }
 };
+
 export default BookShelf;

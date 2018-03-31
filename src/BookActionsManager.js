@@ -1,19 +1,31 @@
 import React from 'react';
 
-function BookActionsManager(props) {
-    const actions = props.actions;
-    return (
-        <div className="book-shelf-changer">
-            <select onChange={()=> console.log(this.value)}>
+class BookActionsManager extends React.Component {
+    
+    constructor(props) {
+        super(props);
+        this.state = { value: ''}
+        this.actions = props.actions;
+    }
+
+    handleChange = (event) => {
+        const destinyShelf = event.target.value;
+        this.props.changeShelf()
+    }
+
+    render(){
+        const handlerChange = this.props.changeShelf;
+        return (<div className="book-shelf-changer">
+            <select value={this.state.value} onChange={this.handleChange} >
                 <option value="none" disabled >Move to...</option>
                 {
-                    actions.map((action,index) => {
-                     return (<option key={index} onSelect={action.handler}>{action.text}</option>)
+                    this.actions.map((action,index) => {
+                     return (<option key={index} value={action.name}>{action.text}</option>)
                     })
                 }
             </select>
-        </div>
-    );
+        </div>);
+    };
 }
 
 export default BookActionsManager;

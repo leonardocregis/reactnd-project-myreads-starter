@@ -13,7 +13,8 @@ function BookItem(props) {
                     }}>
                 </div>
                 <BookActionsManager
-                    actions={props.bookActions}
+                    actions={props.availableActions}
+                    changeShelf={props.changeShelf}
                 />
             </div>
             <div className="book-title">{props.title}</div>
