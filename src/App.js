@@ -80,22 +80,22 @@ class BooksApp extends React.Component {
 
   readyState() {
     this.state = {
-      bookShelves:this.bookShelves
+      bookShelves: this.bookShelves
     };
   }   
 
   changeShelf = (fromShelf, toShelf, book) => {
 
-    let shelfBooksOrigin = this.state.bookShelves.get(fromShelf).books;
-    shelfBooksOrigin.books = shelfBooksOrigin.books.filter(book => book.title !== book.title)
+    let shelfBooksOrigin = this.state.bookShelves.get(fromShelf);
+    shelfBooksOrigin.books = shelfBooksOrigin.books.filter(bookVal => bookVal.title !== book.title)
     this.state.bookShelves.set(fromShelf, shelfBooksOrigin);
 
     let shelfBooksDestiny = this.state.bookShelves.get(toShelf);
-    shelfBooksDestiny.unshift(book);
+    shelfBooksDestiny.books.unshift(book);
     this.state.bookShelves.set(toShelf, shelfBooksDestiny);
 
     const newState = this.state.bookShelves;
-    this.setState({newState});
+    this.setState({bookShelves: newState});
   }
 
   render() {
