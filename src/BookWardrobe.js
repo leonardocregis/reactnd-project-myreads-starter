@@ -34,11 +34,13 @@ class  BookWardrobe extends React.Component {
                 <div>
                     {
                     this.shelves.map( shelf => {
-                                return <BookShelf
-                                    shelf={shelf}
-                                    changeShelf={this.props.changeShelf}
-                                    availableActions={this.filterAction(shelf.name)}
-                                />
+                                return (<div key={shelf.name}> 
+                                            <BookShelf
+                                             shelf={shelf}
+                                             changeShelf={this.props.changeShelf}
+                                             availableActions={this.filterAction(shelf.name)}
+                                             />
+                                        </div>)
                     })
                 }
                 </div>
