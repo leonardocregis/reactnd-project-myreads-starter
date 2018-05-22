@@ -16,7 +16,7 @@ class BookActionsManager extends React.Component {
     render(){
         return (<div className="book-shelf-changer">
             <select value={this.state.value} onChange={this.handleChange} >
-                <option value="none" disabled >Move to...</option>
+                <option value="none" >Move to...</option>
                 {
                     this.actions.map((action,index) => {
                      return (<option key={index} value={action.name}>{action.text}</option>)
