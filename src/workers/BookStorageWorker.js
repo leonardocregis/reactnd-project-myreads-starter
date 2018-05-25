@@ -1,18 +1,65 @@
+import BookShelfDb from '../database/BookShelfDb';
+
 class BookStorageWorker {
 
     bookShelves = new Map();
-    db;
-    constructor() {
-        this.loadDefaultShelves();
-        const books = this.loadDefaultBooks();
-        this.bookShelves.get('reading').books = books.slice(0,2);
-        this.bookShelves.get('wantToRead').books = books.slice(2,4);
-        this.bookShelves.get('read').books = books.slice(4,7);
+    bookShelveDb = new BookShelfDb(window);
 
+    constructor() {
+        this.initShelves();
     }
 
-    updateBookList(books) {
-      
+    updateBookList(listName, books) {
+      this.bookShelveDb.update({"name":listName, "value":books});
+    }
+
+    initShelves() {
+      this.loadFromDb().then(result => {
+        this.loadDefaultShelves();
+        const books = this.loadDefaultBooks();
+        if (result[0]) {
+          this.bookShelves.get('reading').books = result[0].value;
+        } else {
+          let booksAux = books.slice(0,2);
+          this.bookShelves.get('reading').books = booksAux;
+          this.updateBookList('reading', booksAux);
+        }
+        if (result[1]) {
+          this.bookShelves.get('wantToRead').books = result[1].value;
+        } else {
+          let booksAux = books.slice(2,4);
+          this.bookShelves.get('wantToRead').books = booksAux;
+          this.updateBookList('wantToRead', booksAux);
+        }
+        if(result[2]) {
+          this.bookShelves.get('read').books = result[2].value;
+        } else {
+          let booksAux = books.slice(4,7);
+          this.bookShelves.get('read').books = booksAux;
+          this.updateBookList('read', booksAux);
+        }
+      }).catch(err => {
+        throw new Error(err);
+      });
+    }
+
+    loadFromDb() {
+      this.bookShelveDb.createNew('myShelf');
+      return new Promise( (resolve, reject) => {
+        let readingShelf;
+        let wantToReadShelf;
+        let readShelf
+        this.bookShelveDb.fetchData('reading').then((result) => {
+          readingShelf = result;
+          this.bookShelveDb.fetchData('wantToRead').then( result => {
+            wantToReadShelf = result;
+            this.bookShelveDb.fetchData('read').then(result => {
+              readShelf = result;
+              resolve([readingShelf, wantToReadShelf, readShelf]);
+            }).catch(err => reject(err));
+          }).catch(err => reject(err));
+        }).catch(err => reject(err));
+      });
     }
 
     loadDefaultShelves() {
@@ -35,6 +82,7 @@ class BookStorageWorker {
         ]
         shelves.forEach(shelve => this.bookShelves.set(shelve.name, shelve));
     }
+
     loadDefaultBooks() {
         return [
           {
