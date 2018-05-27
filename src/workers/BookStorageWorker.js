@@ -52,12 +52,15 @@ class BookStorageWorker {
         let readingPromise = this.bookShelveDb.fetchData('reading');
         let wantToReadPromise = this.bookShelveDb.fetchData('wantToRead');
         let readPromise = this.bookShelveDb.fetchData('read');
-        Promise.all(readingPromise, wantToReadPromise, readPromise).then(result => {
-          readingShelf = result[0];
-          wantToReadShelf = result[1];
-          readShelf = result[2];
-          resolve([readingShelf, wantToReadShelf, readShelf]);
-        }).catch(err => reject(err));
+        Promise.all(readingPromise, wantToReadPromise, readPromise)
+          .then(result => 
+            {
+              readingShelf = result[0];
+              wantToReadShelf = result[1];
+              readShelf = result[2];
+              resolve([readingShelf, wantToReadShelf, readShelf]);
+            }
+          ).catch(err => reject(err));
       });
     }
 
