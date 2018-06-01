@@ -4,21 +4,13 @@ import BookWardrobe from './components/wardrobe/BookWardrobe';
 import {Route} from 'react-router-dom';
 import './styles/App.css';
 import BookSearcher from './components/book/BookSearcher';
-import BookStorageWorker from './workers/BookStorageWorker'
 
 class BooksApp extends React.Component {
 
   bookShelves = new Map();
-  worker = null;
   constructor(props){
     super(props);
-    let bookStorage;
-    if(window.worker){
-      this.worker = new Worker('./workers/BookStorageWorker.js');
-    } else {
-      bookStorage = new BookStorageWorker();
-      console.error('Worker was not found, app wont be able to persist the state');
-    }
+    
     this.bookShelves = bookStorage.bookShelves;
     this.readyState();
   }
