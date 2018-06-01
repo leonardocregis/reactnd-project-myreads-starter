@@ -2,129 +2,162 @@ class BookShelfDb {
 
     shelfName = "shelf";
     dbOpen = false;
-    callbacks = [];
 
     constructor(window) {
-        this.refWindow = window;
-            if (!this.readyDatabase()) {
-                throw new Error("cant create a IndexedDB");
-            }
-        this.readyDatabase();
-      }
-  
-      readyDatabase() {
-          // In the following line, you should include the prefixes of implementations you want to test.
-          this.indexedDB = this.refWindow.indexedDB || this.refWindow.mozIndexedDB || this.refWindow.webkitIndexedDB || this.refWindow.msIndexedDB;
-          // DON'T use "var indexedDB = ..." if you're not in a function.
-          // Moreover, you may need references to some window.IDB* objects:
-          this.IDBTransaction = this.refWindow.IDBTransaction || this.refWindow.webkitIDBTransaction || this.refWindow.msIDBTransaction || { READ_WRITE: "readwrite" }; // This line should only be needed if it is needed to support the object's constants for older browsers
-          this.IDBKeyRange = this.refWindow.IDBKeyRange || this.refWindow.webkitIDBKeyRange || this.refWindow.msIDBKeyRange;
-          // (Mozilla has never prefixed these objects, so we don't need window.mozIDB*)
-          if (!this.indexedDB) {
-              return false;
+      this.refWindow = window;
+          if (!this.readyDatabase()) {
+              throw new Error("cant create a IndexedDB");
           }
-          return true;
+      this.readyDatabase();
+      this.databaseName = undefined;
+    }
+
+    readyDatabase() {
+        // In the following line, you should include the prefixes of implementations you want to test.
+        this.indexedDB = this.refWindow.indexedDB || this.refWindow.mozIndexedDB || this.refWindow.webkitIndexedDB || this.refWindow.msIndexedDB;
+        // DON'T use "var indexedDB = ..." if you're not in a function.
+        // Moreover, you may need references to some window.IDB* objects:
+        this.IDBTransaction = this.refWindow.IDBTransaction || this.refWindow.webkitIDBTransaction || this.refWindow.msIDBTransaction || { READ_WRITE: "readwrite" }; // This line should only be needed if it is needed to support the object's constants for older browsers
+        this.IDBKeyRange = this.refWindow.IDBKeyRange || this.refWindow.webkitIDBKeyRange || this.refWindow.msIDBKeyRange;
+        // (Mozilla has never prefixed these objects, so we don't need window.mozIDB*)
+        if (!this.indexedDB) {
+            return false;
+        }
+        return true;
+    }
+
+    open(databaseName) {
+      if (this.db && this.databaseName == databaseName) {
+        throw new Error("database already open");
       }
-  
-      onDbOpenReady(db) {
-          this.callbacks.forEach(fn => fn(db));
-          this.cleanActions();
-      }
-  
-      open(databaseName) {
-        const openDBRequest = this.indexedDB.open(databaseName,1);
-        
+      const openDBRequest = this.indexedDB.open(databaseName,1);
+      return new Promise((resolve, reject) => {
         openDBRequest.onerror = (event) => {
           console.log('couldnt open the database');
-          throw new Error('couldnt open the database');
+          reject(['couldnt open the database', event]);
         };
         openDBRequest.onsuccess = (event) => {
           console.log('opened database');
+          this.dbOpen = true;
           this.db = openDBRequest.result;
-          this.onDbOpenReady(db);
+          resolve(this.db);
         };
         openDBRequest.onupgradeneeded = (event) => {
-          throw new Error("Database structure dont exists, use createNew");
+          reject(["Database structure dont exists, use createNew", event]);
         };
-  
-      
-      }
-      createNew(databaseName) {
-          const openDBRequest = this.indexedDB.open(databaseName,1);
+      });
+    }
+
+    createNew(databaseName) {
+        this.dbOpen = false;
+        const openDBRequest = this.indexedDB.open(databaseName,1);
+        let isNewDb = false;
+        let upgradedPromise = new Promise((resolve, reject) => {
+            openDBRequest.onupgradeneeded = (event) => {
+              console.log('creating structure');
+              isNewDb = true;
+              this.db = event.target.result;
+              this.objStore = this.db.createObjectStore(this.shelfName, { keyPath: "name" });
+              this.objStore.transaction.oncomplete = (event) => {
+                resolve(this.db);
+              }
+              this.objStore.transaction.onerror = (event) => {
+                reject(new Error(event));
+              }
+            }
+        });
+        return new Promise( (resolve, reject) => {
           openDBRequest.onerror = (event) => {
-                  console.log('couldnt create the structure');
+            reject(new Error('couldnt create the structure', event));
           };
           openDBRequest.onsuccess = (event) => {
             console.log('created database');
-            this.db = event.target.result;
             this.dbOpen = true;
-            this.onDbOpenReady(this.db);//last run in case the database already exists;
-          };
-          openDBRequest.onupgradeneeded = (event) => {
-            console.log('creating structure');
-                    this.objStore = this.db.createObjectStore(this.shelfName, { keyPath: "name" });
-            this.objStore.transaction.oncomplete = (event) => {
-              this.onDbOpenReady(db);
+            if (isNewDb) {
+              upgradedPromise
+                .then(db => resolve(db))
+                .catch(err => reject(err));
+            } else {
+              reject(new Error('Database already exists'));
             }
           };
-      }
-      /*
-            Function that recives the actions to be done into the Db after its ready.
-            It has the format callback(db),  where the db is the indexedDBs
-        */
-      addAction(callback) {
-        this.callbacks.push(callback);
-      }
-  
-      update(data){
+
+        });
+    }
+
+    update(data){
+      return new Promise((resolve, reject) => {
         console.log('inserting values');
-        let action = (db) => {
-          let customerObjectStore = db.transaction('shelf', 'readwrite').objectStore('shelf');
-          customerObjectStore.add(data);
-        }
-        if(this.dbOpen){
-          action(this.db);
-        } else {
-          this.addAction(action);
-        }
+        const transaction = this.db.transaction('shelf', 'readwrite');
+        const customerObjectStore = transaction.objectStore('shelf');
+        customerObjectStore.put(data);
+
+        transaction.oncomplete = function(event) {
+          resolve(data);
+        };
+        
+        transaction.onerror = function(event) {
+          resolve(new Error(event));
+        };
+      });
+    }
+
+    insert(data){
+      return new Promise((resolve, reject) => {
+        console.log('inserting values');
+        const transaction = this.db.transaction('shelf', 'readwrite');
+        const customerObjectStore = transaction.objectStore('shelf');
+        customerObjectStore.add(data);
+
+        transaction.oncomplete = event =>  resolve(data);
+        
+        transaction.onerror = event => reject(event.target);
+      });
+    }
+
+    delete(index) {
+      return new Promise((resolve, reject) => {
+        console.log('deleting index', index);
+        const transaction = this.db.transaction('shelf', 'readwrite');
+        const customerObjectStore = transaction.objectStore('shelf');
+        customerObjectStore.del(index);
+
+        transaction.oncomplete = function(event) {
+          resolve(data);
+        };
+        
+        transaction.onerror = function(event) {
+          resolve(event);
+        };
+      });
+      
+    }
+
+    fetchData(index) {
+      if(this.dbOpen) {
+        console.log('dbOpen');
+        return new Promise((resolve,reject) => {
+          const transaction = this.db.transaction(["shelf"]);
+          const objectStore = transaction.objectStore("shelf");
+          const request = objectStore.get(index);
+          transaction.onerror = function(event) {
+            reject(event);
+          };
+          request.onerror = function(event) {
+            reject(event);
+          };
+          request.onsuccess = function(event) {
+           resolve(request.result);
+          }
+        });
+      } else {
+        return Promise.reject("Database not open");
       }
-  
-      fetchData(index) {
-        if(this.dbOpen) {
-          return new Promise((resolve,reject) => {
-            let transaction = this.db.transaction(["shelf"]);
-            let objectStore = transaction.objectStore("shelf");
-            let request = objectStore.get(index);
-            request.onerror = function(event) {
-              reject(event);
-            };
-            request.onsuccess = function(event) {
-              resolve(request.result);
-            };
-          });
-        } else {
-          return new Promise((resolve, reject) => {
-            console.log('building fetch promise');
-            let actionFetch = (db) => {
-              console.log('running fetch');
-              let transaction = db.transaction(["shelf"]);
-              let objectStore = transaction.objectStore("shelf");
-              let request = objectStore.get(index);
-              request.onerror = function(event) {
-                reject(event);
-              };
-              request.onsuccess = function(event) {
-                resolve(request.result);
-              };
-            }
-            this.addAction(actionFetch);
-          });
-        }
-      }
-  
-      cleanActions() {
-        this.callbacks = [];
-      }
+    }
+
+    cleanActions() {
+      this.promises = [];
+    }
 }
 
 export default BookShelfDb;
