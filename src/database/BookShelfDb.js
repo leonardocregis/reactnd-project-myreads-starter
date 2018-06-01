@@ -2,6 +2,7 @@ class BookShelfDb {
 
     shelfName = "shelf";
     dbOpen = false;
+    databaseName = undefined;
 
     constructor(window) {
       this.refWindow = window;
@@ -9,7 +10,6 @@ class BookShelfDb {
               throw new Error("cant create a IndexedDB");
           }
       this.readyDatabase();
-      this.databaseName = undefined;
     }
 
     readyDatabase() {
@@ -34,7 +34,7 @@ class BookShelfDb {
       return new Promise((resolve, reject) => {
         openDBRequest.onerror = (event) => {
           console.log('couldnt open the database');
-          reject(['couldnt open the database', event]);
+          reject(['couldnt open the database', event.target.error]);
         };
         openDBRequest.onsuccess = (event) => {
           console.log('opened database');
@@ -43,7 +43,7 @@ class BookShelfDb {
           resolve(this.db);
         };
         openDBRequest.onupgradeneeded = (event) => {
-          reject(["Database structure dont exists, use createNew", event]);
+          reject(["Database structure dont exists, use createNew", event.target.error]);
         };
       });
     }
@@ -62,13 +62,13 @@ class BookShelfDb {
                 resolve(this.db);
               }
               this.objStore.transaction.onerror = (event) => {
-                reject(new Error(event));
+                reject(new Error(event.target.error));
               }
             }
         });
         return new Promise( (resolve, reject) => {
           openDBRequest.onerror = (event) => {
-            reject(new Error('couldnt create the structure', event));
+            reject(['couldnt create the structure', event.target.error]);
           };
           openDBRequest.onsuccess = (event) => {
             console.log('created database');
@@ -97,7 +97,7 @@ class BookShelfDb {
         };
         
         transaction.onerror = function(event) {
-          resolve(new Error(event));
+          resolve(new Error(event.target.error));
         };
       });
     }
@@ -111,7 +111,7 @@ class BookShelfDb {
 
         transaction.oncomplete = event =>  resolve(data);
         
-        transaction.onerror = event => reject(event.target);
+        transaction.onerror = event => reject(event.target.error);
       });
     }
 
@@ -127,7 +127,7 @@ class BookShelfDb {
         };
         
         transaction.onerror = function(event) {
-          resolve(event);
+          reject(event.target.error);
         };
       });
       
@@ -141,10 +141,10 @@ class BookShelfDb {
           const objectStore = transaction.objectStore("shelf");
           const request = objectStore.get(index);
           transaction.onerror = function(event) {
-            reject(event);
+            reject(event.target.error);
           };
           request.onerror = function(event) {
-            reject(event);
+            reject(event.target.error);
           };
           request.onsuccess = function(event) {
            resolve(request.result);
@@ -159,5 +159,6 @@ class BookShelfDb {
       this.promises = [];
     }
 }
+
 
 export default BookShelfDb;
