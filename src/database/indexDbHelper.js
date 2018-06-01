@@ -4,7 +4,8 @@ class BookShelfDb {
     dbOpen = false;
     databaseName = undefined;
 
-    constructor(window) {
+    constructor(window, shelfName) {
+      this.shelfName = shelfName;
       this.refWindow = window;
           if (!this.readyDatabase()) {
               throw new Error("cant create a IndexedDB");
