@@ -7,23 +7,26 @@ import BookSearcher from './components/book/BookSearcher';
 
 class BooksApp extends React.Component {
 
-  bookShelves = new Map();
   worker = null;
   constructor(props){
     super(props);
-    let shelves = new Map();
-    shelves.set('readed',{name:'readed', title:'Currently reading', books:[{
-      title:"To Kill a Mockingbird",
-      authors:"Harper Lee",
-      imageURL:"http://books.google.com/books/content?id=PGR2AwAAQBAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73-GnPVEyb7MOCxDzOYF1PTQRuf6nCss9LMNOSWBpxBrz8Pm2_mFtWMMg_Y1dx92HT7cUoQBeSWjs3oEztBVhUeDFQX6-tWlWz1-feexS0mlJPjotcwFqAg6hBYDXuK_bkyHD-y&source=gbs_api"
-    }]});
-    this.bookShelves = shelves;
+    this.state = {
+      bookShelves: []
+    }
   }
-  state = {
-    bookShelves: new Map()
-  }
+
   componentDidMount() {
-    this.setState ({bookShelves: this.bookShelves});
+    this.setState ({
+      bookShelves: [
+        {
+          name:'readed', title:'Currently reading', books:[{
+            title:"To Kill a Mockingbird",
+            authors:"Harper Lee",
+            imageURL:"http://books.google.com/books/content?id=PGR2AwAAQBAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73-GnPVEyb7MOCxDzOYF1PTQRuf6nCss9LMNOSWBpxBrz8Pm2_mFtWMMg_Y1dx92HT7cUoQBeSWjs3oEztBVhUeDFQX6-tWlWz1-feexS0mlJPjotcwFqAg6hBYDXuK_bkyHD-y&source=gbs_api"
+          }]
+        }
+      ]
+    });
   }   
 
   changeShelf = (fromShelf, toShelf, book) => {

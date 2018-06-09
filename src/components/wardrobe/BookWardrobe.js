@@ -10,7 +10,7 @@ class  BookWardrobe extends React.Component {
         const bookShelves = this.props.shelves;
         console.log('BookWardrobe', bookShelves);
         for(let shelve of bookShelves) {
-            this.shelves.push(shelve[1]);
+            this.shelves.push(shelve);
         }
     }
 
@@ -49,7 +49,7 @@ class  BookWardrobe extends React.Component {
                 <div className="open-search">
                 <Link to="/search" >Add a book</Link>
                 </div>
-        </div>
+            </div>
         );
     }
 };
