@@ -8,6 +8,7 @@ class  BookWardrobe extends React.Component {
     constructor(props) {
         super(props);
         const bookShelves = this.props.shelves;
+        console.log('BookWardrobe', bookShelves);
         for(let shelve of bookShelves) {
             this.shelves.push(shelve[1]);
         }
