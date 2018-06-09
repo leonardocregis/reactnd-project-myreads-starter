@@ -4,7 +4,6 @@ import BookWardrobe from './components/wardrobe/BookWardrobe';
 import {Route} from 'react-router-dom';
 import './styles/App.css';
 import BookSearcher from './components/book/BookSearcher';
-import BookStorageWorker from './workers/BookStorageWorker'
 
 class BooksApp extends React.Component {
 
@@ -12,21 +11,19 @@ class BooksApp extends React.Component {
   worker = null;
   constructor(props){
     super(props);
-    let bookStorage;
-    if(window.worker){
-      this.worker = new Worker('./workers/BookStorageWorker.js');
-    } else {
-      bookStorage = new BookStorageWorker();
-      console.error('Worker was not found, app wont be able to persist the state');
-    }
-    this.bookShelves = bookStorage.bookShelves;
-    this.readyState();
+    let shelves = new Map();
+    shelves.set('readed',{name:'readed', title:'Currently reading', books:[{
+      title:"To Kill a Mockingbird",
+      authors:"Harper Lee",
+      imageURL:"http://books.google.com/books/content?id=PGR2AwAAQBAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73-GnPVEyb7MOCxDzOYF1PTQRuf6nCss9LMNOSWBpxBrz8Pm2_mFtWMMg_Y1dx92HT7cUoQBeSWjs3oEztBVhUeDFQX6-tWlWz1-feexS0mlJPjotcwFqAg6hBYDXuK_bkyHD-y&source=gbs_api"
+    }]});
+    this.bookShelves = shelves;
   }
-
-  readyState() {
-    this.state = {
-      bookShelves: this.bookShelves
-    };
+  state = {
+    bookShelves: new Map()
+  }
+  componentDidMount() {
+    this.setState ({bookShelves: this.bookShelves});
   }   
 
   changeShelf = (fromShelf, toShelf, book) => {
