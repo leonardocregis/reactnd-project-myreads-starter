@@ -1,4 +1,4 @@
-import IndexDbHelper from './IndexDbHelper';
+import IndexDbHelper from './indexDbHelper';
 
 /**
  * Class to manage the indexDb values
