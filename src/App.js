@@ -22,12 +22,13 @@ class BooksApp extends React.Component {
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.bookStorage.loadFromDb()
       .then( result => {
+        console.log("componente will mount", result);
         let map = new Map();
         result.forEach(element => {
-          map.set(element.title, element.books);
+          map.set(element.title, element);
         });
         this.setState({bookShelves:map});
       })
