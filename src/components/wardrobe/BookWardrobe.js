@@ -14,7 +14,7 @@ class  BookWardrobe extends React.Component {
     }
 
     render() {
-
+        this.shelves = [];
         this.props.shelves.forEach((value) => {
             this.shelves.push(value);
         });
