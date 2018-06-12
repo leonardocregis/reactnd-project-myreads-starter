@@ -22,13 +22,13 @@ class BooksApp extends React.Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.bookStorage.loadFromDb()
       .then( result => {
         console.log("componente will mount", result);
         let map = new Map();
         result.forEach(element => {
-          map.set(element.title, element);
+          map.set(element.name, element);
         });
         this.setState({bookShelves:map});
       })
@@ -36,17 +36,32 @@ class BooksApp extends React.Component {
   }
 
   changeShelf = (fromShelf, toShelf, book) => {
-
-    let shelfBooksOrigin = this.state.bookShelves.get(fromShelf);
-    shelfBooksOrigin.books = shelfBooksOrigin.books.filter(bookVal => bookVal.title !== book.title)
-    this.state.bookShelves.set(fromShelf, shelfBooksOrigin);
-
-    let shelfBooksDestiny = this.state.bookShelves.get(toShelf);
-    shelfBooksDestiny.books.unshift(book);
-    this.state.bookShelves.set(toShelf, shelfBooksDestiny);
-
-    const newState = this.state.bookShelves;
-    this.setState({bookShelves: newState});
+    if (this.state) {
+      const bookShelves = this.state.bookShelves;
+      let shelfBooksOrigin = bookShelves.get(fromShelf);
+      if (shelfBooksOrigin) {
+        if (shelfBooksOrigin.books) {
+          shelfBooksOrigin.books = shelfBooksOrigin.books.filter(bookVal => bookVal.title !== book.title)
+        } else {
+          console.log(`non existing books configurations for: ${fromShelf}`)
+          shelfBooksOrigin.books = [];
+        }
+        bookShelves.set(fromShelf, shelfBooksOrigin);
+    
+        let shelfBooksDestiny = bookShelves.get(toShelf);
+        if (shelfBooksDestiny) {
+          shelfBooksDestiny.books.unshift(book);
+          bookShelves.set(toShelf, shelfBooksDestiny);
+      
+          const newState = this.state.bookShelves;
+          this.setState({bookShelves: newState});      
+        } else {
+          throw new Error(`non existing configuration for: ${toShelf}`);
+        }
+      } else {
+        throw new Error(`Non existing configuration for: ${fromShelf}`);
+      }
+    }
   }
 
   render() {
