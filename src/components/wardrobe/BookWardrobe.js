@@ -5,15 +5,6 @@ import {Link} from 'react-router-dom';
 class  BookWardrobe extends React.Component {
     shelves = [];
     
-    constructor(props) {
-        super(props);
-        const bookShelves = this.props.shelves;
-        for(let shelve of bookShelves) {
-            this.shelves.push(shelve[1]);
-        }
-    }
-
-    
     filterAction = (shelfName) => {
         return this.convertShelfActions().filter(action => action.name !== shelfName);
     }
@@ -24,6 +15,9 @@ class  BookWardrobe extends React.Component {
 
     render() {
 
+        this.props.shelves.forEach((value) => {
+            this.shelves.push(value);
+        });
 
         return (
             <div className="list-books">
