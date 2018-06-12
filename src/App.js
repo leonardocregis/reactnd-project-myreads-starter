@@ -39,6 +39,7 @@ class BooksApp extends React.Component {
     if (this.state) {
       const bookShelves = this.state.bookShelves;
       let shelfBooksOrigin = bookShelves.get(fromShelf);
+      
       if (shelfBooksOrigin) {
         if (shelfBooksOrigin.books) {
           shelfBooksOrigin.books = shelfBooksOrigin.books.filter(bookVal => bookVal.title !== book.title)
@@ -46,14 +47,18 @@ class BooksApp extends React.Component {
           console.log(`non existing books configurations for: ${fromShelf}`)
           shelfBooksOrigin.books = [];
         }
+
         bookShelves.set(fromShelf, shelfBooksOrigin);
-    
+
+
         let shelfBooksDestiny = bookShelves.get(toShelf);
         if (shelfBooksDestiny) {
           shelfBooksDestiny.books.unshift(book);
           bookShelves.set(toShelf, shelfBooksDestiny);
-      
-          const newState = this.state.bookShelves;
+
+          this.persistBooks(fromShelf, shelfBooksDestiny, toShelf, shelfBooksOrigin);
+
+          const newState = bookShelves;
           this.setState({bookShelves: newState});      
         } else {
           throw new Error(`non existing configuration for: ${toShelf}`);
@@ -64,6 +69,16 @@ class BooksApp extends React.Component {
     }
   }
 
+  persistBooks(fromShelf, shelfBooksDestiny, toShelf, shelfBooksOrigin ) {
+    let updates = [];
+    updates.push(this.bookStorage.updateBookList(fromShelf, shelfBooksOrigin));
+    updates.push(this.bookStorage.updateBookList(toShelf, shelfBooksDestiny));
+    if (updates.length > 0) {
+      Promise.all(updates)
+        .then( data => console.log(`saved with sucess ${data}`))
+        .catch( err=> console.log(err));
+    }
+  }
   render() {
 
     return (
