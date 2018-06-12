@@ -56,24 +56,33 @@ class BookStorage {
               this.fetchStoredShelfs()
                 .then(shelfData => 
                   {
+                    console.log('shelfData', shelfData);
                     let shelfMap = this.buildFullDefaultShelf();
                     let savingPromises = [];
                     console.log('default map', shelfMap);
                     shelfMap.forEach( shelf => {
                       console.log('processing default map item',shelf);
                       shelfMap.set(shelf.name, shelf);
-                      if (!shelfData.get(shelf.name)){
+                      const loadedShelf = shelfData.get(shelf.name);
+                      if (!loadedShelf){
                         console.log('going to insert', shelf);
                         savingPromises.push(this.bookShelveDb.update(shelf));
-                      } 
+                      } else {
+                        console.log('going to load', loadedShelf);
+                        shelfMap.set(shelf.name, loadedShelf);
+                      }
                     });
-                    Promise.all(savingPromises)
-                     .then(result => {
+                    console.log('shelfMap', shelfMap);
+                    if (savingPromises.length > 0) {
+                      Promise.all(savingPromises)
+                      .then(result => {
+                       resolve(shelfMap);
+                      }).catch(err => {
+                        reject(new Error(err));
+                      }); 
+                    } else {
                       resolve(shelfMap);
-                     }).catch(err => {
-                       reject(new Error(err));
-                     });
-                    
+                    }
                   }
                 )
                 .catch( err => 
