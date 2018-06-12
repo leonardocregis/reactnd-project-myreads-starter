@@ -17,7 +17,7 @@ class BookShelf extends React.Component {
         <div className="bookshelf-books">
           <ol className="books-grid">
             {
-              shelf.books && shelf.books.map( book => {
+              !shelf.books && shelf.books.map( book => {
                 return (
                   <li key={book.title}>
                     <BookItem
