@@ -66,10 +66,10 @@ class BookStorage {
                       const loadedShelf = shelfData.get(shelf.name);
                       if (!loadedShelf){
                         console.log('going to insert', shelf);
-                        savingPromises.push(this.bookShelveDb.update(shelf));
+                        savingPromises.push(this.updateBookList(shelf.name, shelf));
                       } else {
                         console.log('going to load', loadedShelf);
-                        shelfMap.set(shelf.name, loadedShelf);
+                        shelfMap.set(shelf.name, loadedShelf.value);
                       }
                     });
                     console.log('shelfMap', shelfMap);
