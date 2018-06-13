@@ -15,10 +15,9 @@ class  BookWardrobe extends React.Component {
 
     render() {
         this.shelves = [];
-        this.props.shelves.forEach((value) => {
-            this.shelves.push(value);
+        this.props.shelves.forEach((shelve) => {
+            this.shelves.push(shelve);
         });
-
         return (
             <div className="list-books">
                 <div className="list-books-title">
