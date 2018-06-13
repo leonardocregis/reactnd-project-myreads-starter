@@ -26,6 +26,7 @@ class  BookWardrobe extends React.Component {
                 <div className="list-books-content">
                 <div>
                     {
+                    this.shelves &&
                     this.shelves.map( shelf => {
                                 return (<div key={shelf.name}> 
                                             <BookShelf
