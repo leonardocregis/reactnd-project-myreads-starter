@@ -25,7 +25,7 @@ class BooksApp extends React.Component {
   componentDidMount() {
     this.bookStorage.loadFromDb()
       .then( result => {
-        console.log("componente will mount", result);
+        console.log("component will mount", result);
         let map = new Map();
         result.forEach(element => {
           map.set(element.name, element);
