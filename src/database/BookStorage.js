@@ -106,6 +106,7 @@ class BookStorage {
       let defaultBookShelve = this.loadDefaultShelves();
       const books = this.loadDefaultBooks()
 
+      defaultBookShelve.get('none').books = [];
       defaultBookShelve.get('reading').books = books.slice(0,2);
       defaultBookShelve.get('wantToRead').books = books.slice(2,4);
       defaultBookShelve.get('read').books = books.slice(4,7);
