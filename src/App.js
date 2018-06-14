@@ -11,15 +11,8 @@ class BooksApp extends React.Component {
   bookShelves = new Map();
   bookStorage = new BookStorage('myShelf');
 
-  constructor(props){
-    super(props);
-    this.readyState();
-  }
-
-  readyState() {
-    this.state = {
-      bookShelves: this.bookShelves
-    };
+  state = {
+    bookShelves: this.bookShelves
   }
 
   componentDidMount() {
