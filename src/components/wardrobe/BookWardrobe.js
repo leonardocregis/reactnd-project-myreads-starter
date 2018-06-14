@@ -3,21 +3,13 @@ import BookShelf from '../shelf/BookShelf';
 import {Link} from 'react-router-dom';
 
 class  BookWardrobe extends React.Component {
-    shelves = [];
-    
-    filterAction = (shelfName) => {
-        return this.convertShelfActions().filter(action => action.name !== shelfName);
-    }
-    
-    convertShelfActions() {
-        return this.shelves.map(shelve => { return {name: shelve.name, text:shelve.title}});
-    }
 
     render() {
-        this.shelves = [];
+        let shelves = [];
         this.props.shelves.forEach((shelve) => {
-            this.shelves.push(shelve);
+            shelves.push(shelve);
         });
+        const bookUtils = new BookUtils(this.shelves);
         return (
             <div className="list-books">
                 <div className="list-books-title">
@@ -26,13 +18,13 @@ class  BookWardrobe extends React.Component {
                 <div className="list-books-content">
                 <div>
                     {
-                    this.shelves &&
-                    this.shelves.map( shelf => {
+                    shelves &&
+                    shelves.map( shelf => {
                                 return (<div key={shelf.name}> 
                                             <BookShelf
                                              shelf={shelf}
                                              changeShelf={this.props.changeShelf}
-                                             availableActions={this.filterAction(shelf.name)}
+                                             availableActions={bookUtils.filterAction(shelf.name)}
                                              />
                                         </div>)
                     })
