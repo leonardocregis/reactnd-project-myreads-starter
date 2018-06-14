@@ -80,17 +80,18 @@ class BooksApp extends React.Component {
     }
   }
   render() {
-
+    const {bookShelves} = this.state;
     return (
       <div className="app">
         <Route path="/search" render={() => (
             <BookSearcher
+              shelves={bookShelves}
             />
           )}/>
           <Route exact path="/" render={() =>(
             <BookWardrobe
               title="My reads"
-              shelves={this.state.bookShelves}
+              shelves={bookShelves}
               changeShelf={this.changeShelf}
             />
             )}
