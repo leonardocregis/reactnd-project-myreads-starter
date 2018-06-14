@@ -100,7 +100,10 @@ class BookStorage {
           );
     });
   }
-
+  /**
+   * 
+   * Create a basic local structure of shelfs
+   */
   buildFullDefaultShelf() {
 
       let defaultBookShelve = this.loadDefaultShelves();
@@ -114,7 +117,7 @@ class BookStorage {
       return defaultBookShelve;
   }
   /**
-   * Seek from the 3 types of shelfs : reading, wantToRead, read  the values that are saved.
+   * Seek from the 3 types of shelfs from some persitence : reading, wantToRead, read  the values that are saved.
    */
   fetchStoredShelfs() {
     return new Promise( (resolve, reject) => {
@@ -134,9 +137,17 @@ class BookStorage {
       }
     );
   }
-
+  /**
+   * Load local configuration of shelfs
+   */
   loadDefaultShelves() {
       const shelves = [
+          {
+            name:'none',
+            title:'none',
+            books:[],
+            synchronized: false
+          },
           {
               name: 'reading',
               title: 'Currently reading',
@@ -160,7 +171,9 @@ class BookStorage {
       shelves.forEach(shelve => shelveMap.set(shelve.name, shelve));
       return shelveMap;
   }
-
+  /**
+   * Load a local definition of the books
+   */
   loadDefaultBooks() {
       return [
         {
