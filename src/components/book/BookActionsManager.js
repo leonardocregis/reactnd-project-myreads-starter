@@ -5,8 +5,8 @@ class BookActionsManager extends React.Component {
     constructor(props) {
         super(props);
         this.state = { value: ''}
-        this.actions = props.actions;
     }
+
 
     handleChange = (event) => {
         const destinyShelf = event.target.value;
@@ -14,11 +14,12 @@ class BookActionsManager extends React.Component {
     }
 
     render(){
+        const {actions} = this.props;
         return (<div className="book-shelf-changer">
             <select value={this.state.value} onChange={this.handleChange} >
                 <option value="none" >Move to...</option>
                 {
-                    this.actions.map((action,index) => {
+                    actions && actions.map((action,index) => {
                      return (<option key={index} value={action.name}>{action.text}</option>)
                     })
                 }
