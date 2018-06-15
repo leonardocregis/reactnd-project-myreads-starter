@@ -13,3 +13,5 @@ class BookUtils {
     }
 
 }
+
+export default BookUtils;
