@@ -1,6 +1,7 @@
 import React from 'react';
 import BookShelf from '../shelf/BookShelf';
 import {Link} from 'react-router-dom';
+import BookUtils from '../book/BookUtils';
 
 class  BookWardrobe extends React.Component {
 
@@ -9,7 +10,7 @@ class  BookWardrobe extends React.Component {
         this.props.shelves.forEach((shelve) => {
             shelves.push(shelve);
         });
-        const bookUtils = new BookUtils(this.shelves);
+        const bookUtils = new BookUtils(shelves);
         return (
             <div className="list-books">
                 <div className="list-books-title">
