@@ -1,12 +1,13 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import * as BooksAPI from '../../api/BooksAPI'
+import BookItem from './BookItem';
 
 class BookSearcher  extends React.Component {
 
   state = {
     query: '',
-    bookList: new Map()
+    bookList: []
   }
 
   updateQuery = (query) => {
@@ -24,13 +25,20 @@ class BookSearcher  extends React.Component {
   componentDidMount() {
     BooksAPI.search('React',15).then(books => {
       const bookList = books;
-      console.log(bookList);
+      console.log('componentDidMount', bookList);
       this.setState({bookList})
     }).catch( err => console.error( err));
   }
 
+  changeChelf(from, to, book) {
+    console.log('Change chelf called');
+  }
+
   render() {
-      const {query} = this.state;
+      const {query, bookList} = this.state;
+      const {availableActions} = this.props;
+      console.log(availableActions);
+      console.log(bookList);
       return (
         <div className="search-books">
         <div className="search-books-bar">
@@ -58,7 +66,23 @@ class BookSearcher  extends React.Component {
           </div>
         </div>
         <div className="search-books-results">
-          <ol className="books-grid"></ol>
+          <ol className="books-grid">
+            {
+              bookList.length > 0 && bookList.map( book => {
+                return (
+                  <li key={book.id}>
+                    <BookItem
+                      imageURL={book.imageLinks.thumbnail}
+                      title={book.title}
+                      authors={book.authors}
+                      availableActions={availableActions}
+                      changeShelf={this.changeShelf}
+                    />
+                  </li>
+                )
+              })
+            }
+          </ol>
         </div>
       </div>
     );

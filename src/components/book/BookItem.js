@@ -8,8 +8,8 @@ class BookItem  extends React.Component {
     }
 
     render() {
-        const props = this.props;
-        const urlImage = 'url("'+props.imageURL+'")';
+        const {title, authors, availableActions, imageURL} = this.props;
+        const urlImage = 'url("'+imageURL+'")';
          return (
             <div className="book">
                 <div className="book-top">
@@ -20,12 +20,12 @@ class BookItem  extends React.Component {
                         }}>
                     </div>
                     <BookActionsManager
-                        actions={props.availableActions}
+                        actions={availableActions}
                         changeShelf={this.changeShelf.bind(this)}
                     />
                 </div>
-                <div className="book-title">{props.title}</div>
-                <div className="book-authors">{props.authors}</div>
+                <div className="book-title">{title}</div>
+                <div className="book-authors">{authors}</div>
             </div>
         )
     }

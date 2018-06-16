@@ -24,6 +24,7 @@ class BooksApp extends React.Component {
         result.forEach(element => {
           map.set(element.name, element);
         });
+        console.log('built map', map);
         this.setState({bookShelves:map});
       })
       .catch( err => console.log(err));
