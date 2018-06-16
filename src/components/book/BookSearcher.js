@@ -55,7 +55,7 @@ class BookSearcher  extends React.Component {
             */}
             <input 
               type="text"
-              placeholder="Search by title or author"
+              placeholder="Search by title or author, min 3 chars"
               value={query}
               onChange={(event) => this.updateQuery(event.target.value)}
             />
