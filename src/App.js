@@ -5,11 +5,13 @@ import {Route} from 'react-router-dom';
 import './styles/App.css';
 import BookSearcher from './components/book/BookSearcher';
 import BookStorage from './database/BookStorage';
+import BookUtils from "./components/book/BookUtils";
 
 class BooksApp extends React.Component {
 
   bookShelves = new Map();
   bookStorage = new BookStorage('myShelf');
+  bookUtils = new BookUtils();
 
   state = {
     bookShelves: this.bookShelves
@@ -18,7 +20,6 @@ class BooksApp extends React.Component {
   componentDidMount() {
     this.bookStorage.loadFromDb()
       .then( result => {
-        console.log("component will mount", result);
         let map = new Map();
         result.forEach(element => {
           map.set(element.name, element);
@@ -72,13 +73,24 @@ class BooksApp extends React.Component {
         .catch( err=> console.log(err));
     }
   }
+
+  extractShelvesNames(shelves) {
+    let shelvesNameTitle = [];
+    shelves.forEach( shelve => {
+      shelvesNameTitle.push({name: shelve.name, text: shelve.title});
+    });
+    return shelvesNameTitle;
+  }
+
   render() {
     const {bookShelves} = this.state;
+
     return (
       <div className="app">
         <Route path="/search" render={() => (
             <BookSearcher
               shelves={bookShelves}
+              availableActions={this.extractShelvesNames(bookShelves)}
             />
           )}/>
           <Route exact path="/" render={() =>(
