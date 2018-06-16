@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 import * as BooksAPI from '../../api/BooksAPI'
 import BookItem from './BookItem';
 
+
 class BookSearcher  extends React.Component {
 
   state = {
@@ -27,14 +28,6 @@ class BookSearcher  extends React.Component {
     );
   }
 
-  componentDidMount() {
-    BooksAPI.search('React',15).then(books => {
-      const bookList = books;
-      console.log('componentDidMount', bookList);
-      this.setState({bookList})
-    }).catch( err => console.error( err));
-  }
-
   changeChelf(from, to, book) {
     console.log('Change chelf called');
   }
@@ -42,8 +35,7 @@ class BookSearcher  extends React.Component {
   render() {
       const {query, bookList} = this.state;
       const {availableActions} = this.props;
-      console.log(availableActions);
-      console.log(bookList);
+
       return (
         <div className="search-books">
         <div className="search-books-bar">
