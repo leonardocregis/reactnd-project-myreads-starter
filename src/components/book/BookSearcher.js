@@ -11,7 +11,12 @@ class BookSearcher  extends React.Component {
   }
 
   updateQuery = (query) => {
-    
+    this.setState({query});
+    if (query.length > 2) {
+      BooksAPI.search(query).then(books => {
+        this.setState({bookList: books})
+      }).catch( err => console.error( err));  
+    }
   }
 
   clearQuery = () => {
