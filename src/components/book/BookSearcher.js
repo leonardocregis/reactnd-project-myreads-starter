@@ -60,7 +60,7 @@ class BookSearcher  extends React.Component {
       )  
     } else {
       return (
-        <div> <label> No Results</label> </div>
+        <div> <label>No Results</label> </div>
       )
     }
   }
