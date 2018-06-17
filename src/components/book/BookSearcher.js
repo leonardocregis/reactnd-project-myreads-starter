@@ -8,15 +8,20 @@ class BookSearcher  extends React.Component {
 
   state = {
     query: '',
-    bookList: []
+    bookList: [],
+    loading: false
   }
 
   updateQuery = (query) => {
     this.setState({query});
     if (query.length > 2) {
+      this.setState({loading: true});
       BooksAPI.search(query).then(books => {
-        this.setState({bookList: books})
-      }).catch( err => console.error( err));  
+        this.setState({bookList: books, loading: false});
+      }).catch( err => {
+        console.error(err);
+        this.setState({loading: false, error: err});
+      });  
     }
   }
 
@@ -32,8 +37,36 @@ class BookSearcher  extends React.Component {
     console.log('Change chelf called');
   }
 
+  renderBookList(bookList,availableActions) {
+    return ( 
+      <ol className="books-grid">
+      {
+        bookList.length > 0 && bookList.map( book => {
+          return (
+              <li key={book.id}>
+                <BookItem
+                  imageURL={book.imageLinks.thumbnail}
+                  title={book.title}
+                  authors={book.authors}
+                  availableActions={availableActions}
+                  changeShelf={this.changeShelf}
+                />
+              </li>
+          )
+        })
+      }
+      </ol>
+    )
+  }
+  renderLoading() {
+    return (
+      <div>
+        <label> Loading...</label>
+      </div>
+    )
+  }
   render() {
-      const {query, bookList} = this.state;
+      const {query, bookList, loading} = this.state;
       const {availableActions} = this.props;
 
       return (
@@ -63,23 +96,12 @@ class BookSearcher  extends React.Component {
           </div>
         </div>
         <div className="search-books-results">
-          <ol className="books-grid">
-            {
-              bookList.length > 0 && bookList.map( book => {
-                return (
-                  <li key={book.id}>
-                    <BookItem
-                      imageURL={book.imageLinks.thumbnail}
-                      title={book.title}
-                      authors={book.authors}
-                      availableActions={availableActions}
-                      changeShelf={this.changeShelf}
-                    />
-                  </li>
-                )
-              })
-            }
-          </ol>
+          { 
+            loading && this.renderLoading()
+          }
+          {
+            !loading && this.renderBookList(bookList, availableActions)
+          }
         </div>
       </div>
     );
