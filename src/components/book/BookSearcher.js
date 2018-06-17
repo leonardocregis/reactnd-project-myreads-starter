@@ -38,25 +38,31 @@ class BookSearcher  extends React.Component {
   }
 
   renderBookList(bookList,availableActions) {
-    return ( 
-      <ol className="books-grid">
-      {
-        bookList.length > 0 && bookList.map( book => {
-          return (
-              <li key={book.id}>
-                <BookItem
-                  imageURL={book.imageLinks.thumbnail}
-                  title={book.title}
-                  authors={book.authors}
-                  availableActions={availableActions}
-                  changeShelf={this.changeShelf}
-                />
-              </li>
-          )
-        })
-      }
-      </ol>
-    )
+    if (bookList.length > 0) {
+      return ( 
+        <ol className="books-grid">
+        {
+          bookList.map( book => {
+            return (
+                <li key={book.id}>
+                  <BookItem
+                    imageURL={book.imageLinks.thumbnail}
+                    title={book.title}
+                    authors={book.authors}
+                    availableActions={availableActions}
+                    changeShelf={this.changeShelf}
+                  />
+                </li>
+            )
+          })
+        }
+        </ol>
+      )  
+    } else {
+      return (
+        <div> <label> No Results</label> </div>
+      )
+    }
   }
   renderLoading() {
     return (
