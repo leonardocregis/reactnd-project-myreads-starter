@@ -67,7 +67,7 @@ class BookSearcher  extends React.Component {
   renderLoading() {
     return (
       <div>
-        <label> Loading...</label>
+        <label>Loading...</label>
       </div>
     )
   }
