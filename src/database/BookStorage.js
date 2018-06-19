@@ -108,7 +108,7 @@ class BookStorage {
    */
   fetchStoredShelfs() {
     return new Promise( (resolve, reject) => {
-      let readingPromise = this.bookShelveDb.fetchData('reading');
+      let readingPromise = this.bookShelveDb.fetchData('currentlyReading');
       let wantToReadPromise = this.bookShelveDb.fetchData('wantToRead');
       let readPromise = this.bookShelveDb.fetchData('read');
       Promise.all([readingPromise, wantToReadPromise, readPromise])
