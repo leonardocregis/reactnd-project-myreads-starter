@@ -64,7 +64,6 @@ class BookStorage {
                     console.log('default map', shelfMap);
                     shelfMap.forEach( shelf => {
                       console.log('processing default map item',shelf);
-                      shelfMap.set(shelf.name, shelf);
                       const loadedShelf = shelfData.get(shelf.name);
                       if (!loadedShelf){
                         console.log('going to insert', shelf);
