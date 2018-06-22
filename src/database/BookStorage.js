@@ -1,5 +1,6 @@
 import IndexDbHelper from './indexDbHelper';
 import DefaultBookShelves from './DefaultBookShelves';
+import * as BooksAPI from '../api/BooksAPI'
 
 /**
  * Class to manage the indexDb values
@@ -52,25 +53,24 @@ class BookStorage {
   loadFromDb() {
     return new Promise( (resolve, reject) => {
         let db = this.bookShelveDb;
+        let shelfMap = this.defaultBookShelves.loadDefaultShelves();
         db.open(this.storageName)
           .then(() => {
-              this.fetchStoredShelfs()
-                .then(shelfData => 
+              BooksAPI.getAll().then( books => {
+                books.forEach(book => {
+                  let shelf = shelfMap.get(book.shelf);
+                  shelf.books.push(book);
+                  this.updateBookList(book.shelf, shelf);
+                });
+                resolve(shelfMap);
+              }).catch( err => 
                   {
-                    let shelfMap = this.defaultBookShelves.loadDefaultShelves();
-                    shelfData.forEach(shelf => {
-                      const loadedShelf = shelfData.get(shelf.name);
-                      if (loadedShelf) {
-                        shelfMap.set(shelf.name, shelf.value);
-                      }  
-                    });
-                    resolve(shelfMap);
-                  }
-                )
-                .catch( err => 
-                  {
-                    let defaultShelf = this.defaultBookShelves.loadDefaultShelves(); 
-                    resolve(defaultShelf);
+                    this.fetchStoredShelfs().then( shelfs => {
+                      shelfs.forEach( shelf => {
+                        let auxShelf = shelfMap.get(shelf.shelf);
+                        auxShelf.books = shelf.value.books;      
+                      });
+                    }).catch(err => reject(err));
                   }
                 );
             }
