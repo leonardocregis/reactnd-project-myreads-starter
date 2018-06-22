@@ -89,7 +89,7 @@ class BookStorage {
                 .catch( err => 
                   {
                     console.log('line 78 something wrong happen', err);
-                    let defaultShelf = this.buildFullDefaultShelf(); 
+                    let defaultShelf = this.defaultBookShelves.loadDefaultShelves(); 
                     resolve(defaultShelf);
                   }
                 );
