@@ -48,6 +48,7 @@ class BooksApp extends React.Component {
 
         let shelfBooksDestiny = bookShelves.get(toShelf);
         if (shelfBooksDestiny) {
+          book.shelf = shelfBooksDestiny.name;
           shelfBooksDestiny.books.unshift(book);
           bookShelves.set(toShelf, shelfBooksDestiny);
 
