@@ -54,41 +54,21 @@ class BookStorage {
         let db = this.bookShelveDb;
         db.open(this.storageName)
           .then(() => {
-              console.log('load process done');
               this.fetchStoredShelfs()
                 .then(shelfData => 
                   {
-                    console.log('shelfData', shelfData);
-                    let shelfMap = this.defaultBookShelves.buildFullDefaultShelf();
-                    let savingPromises = [];
-                    console.log('default map', shelfMap);
-                    shelfMap.forEach( shelf => {
-                      console.log('processing default map item',shelf);
+                    let shelfMap = this.defaultBookShelves.loadDefaultShelves();
+                    shelfData.forEach(shelf => {
                       const loadedShelf = shelfData.get(shelf.name);
-                      if (!loadedShelf){
-                        console.log('going to insert', shelf);
-                        savingPromises.push(this.updateBookList(shelf.name, shelf));
-                      } else {
-                        console.log('going to load', loadedShelf);
-                        shelfMap.set(shelf.name, loadedShelf.value);
-                      }
+                      if (loadedShelf) {
+                        shelfMap.set(shelf.name, shelf.value);
+                      }  
                     });
-                    console.log('shelfMap', shelfMap);
-                    if (savingPromises.length > 0) {
-                      Promise.all(savingPromises)
-                      .then(result => {
-                       resolve(shelfMap);
-                      }).catch(err => {
-                        reject(new Error(err));
-                      }); 
-                    } else {
-                      resolve(shelfMap);
-                    }
+                    resolve(shelfMap);
                   }
                 )
                 .catch( err => 
                   {
-                    console.log('line 78 something wrong happen', err);
                     let defaultShelf = this.defaultBookShelves.loadDefaultShelves(); 
                     resolve(defaultShelf);
                   }
@@ -114,7 +94,7 @@ class BookStorage {
         .then(result => 
           {
             let shelfMap = new Map();
-            shelfMap.set('reading', result[0]);
+            shelfMap.set('currentlyReading', result[0]);
             shelfMap.set('wantToRead', result[1]);
             shelfMap.set('read', result[2]);
             resolve(shelfMap);
