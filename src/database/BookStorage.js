@@ -13,37 +13,39 @@ import * as BooksAPI from '../api/BooksAPI'
  * 
  * data format into the indexDb (following the IndexDbHelper format)  {index, value}
  *  where value is [sample]
- *             {
+ *             interface Shelf {
  *              name: 'reading',
  *              title: 'Currently reading',
  *              books: [
- *                {
- *                  allowAnonLogging:<boolean>
- *                  authors:Array[1]
- *                  averageRating:<x.x>
- *                  canonicalVolumeLink:<url>
- *                  categories:Array[1]
- *                  contentVersion:<x.x.x.x.tag.x>
- *                  description:"Now available for the first time in a mass-market premium paperback edition—master storyteller Stephen King presents the classic #1 New York Times bestseller about a mysterious store than can sell you…"
- *                  id:<random-unike-id>
- *                  imageLinks:{…}
- *                  industryIdentifiers:Array[2]
- *                  infoLink:<url>
- *                  language:<lang-shortcut>
- *                  maturityRating:"NOT_MATURE"
- *                  pageCount:<integer>
- *                  previewLink:<url>
- *                  printType:"BOOK"
- *                  publishedDate:<date-yyyy-mm-dd>
- *                  publisher:<string>
- *                  ratingsCount:<integer>
- *                  readingModes:{…}
- *                  shelf:<shelf-name>:"read","currentlyReading","wantToRead"
- *                  title:<string>
- *                }
+ *                Book,
  *              ],
  *              synchronized: false,
  *             }
+ * 
+ * interface Book {
+*   allowAnonLogging:<boolean>
+*   authors:Array[1]
+*   averageRating:<x.x>
+*   canonicalVolumeLink:<url>
+*   categories:Array[1]
+*   contentVersion:<x.x.x.x.tag.x>
+*   description:"Now available for the first time in a mass-market premium paperback edition—master storyteller Stephen King presents the classic #1 New York Times bestseller about a mysterious store than can sell you…"
+*   id:<random-unike-id>
+*   imageLinks:{…}
+*   industryIdentifiers:Array[2]
+*   infoLink:<url>
+*   language:<lang-shortcut>
+*   maturityRating:"NOT_MATURE"
+*   pageCount:<integer>
+*   previewLink:<url>
+*   printType:"BOOK"
+*   publishedDate:<date-yyyy-mm-dd>
+*   publisher:<string>
+*   ratingsCount:<integer>
+*   readingModes:{…}
+*   shelf:<shelf-name>:"read","currentlyReading","wantToRead"
+*   title:<string>
+ * }
  */
 class BookStorage {
   defaultBookShelves = new DefaultBookShelves();
@@ -58,7 +60,7 @@ class BookStorage {
    * 
    * Pre requirements:  the books into the shelfs must point to the correct shelf
    * 
-   * @param {string} listName 
+   * @param {String} listName 
    * @param {title:string, authors:string, imageURL:string} books
    * @returns Promise.then(updatedValues)
    */
