@@ -43,13 +43,15 @@ class BookSearcher  extends React.Component {
         <ol className="books-grid">
         {
           bookList.map( book => {
+            
+            const actions = availableActions.filter(action => book.shelf !== action.name);
             return (
                 <li key={book.id}>
                   <BookItem
                     imageURL={book.imageLinks.thumbnail}
                     title={book.title}
                     authors={book.authors}
-                    availableActions={availableActions}
+                    availableActions={actions}
                     changeShelf={this.changeShelf}
                   />
                 </li>
