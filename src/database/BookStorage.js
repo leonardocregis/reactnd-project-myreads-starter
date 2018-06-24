@@ -5,7 +5,10 @@ import * as BooksAPI from '../api/BooksAPI'
 /**
  * Class to manage the indexDb values
  * 
- * It open or create a connection to a indexDb, loads default data to it, if theres no data . 
+ * It seeks the remote recorded books in the first load,
+ *  if the connection is not working , seeks locally
+ *  if even the local doesn't exist, show a error since theres nothing to do.
+ * 
  * Returns a default map if the connection to indexDb doesn't works, take care to check if latter on it works and loads the data to indexBb
  * 
  * data format into the indexDb (following the IndexDbHelper format)  {index, value}
@@ -15,9 +18,28 @@ import * as BooksAPI from '../api/BooksAPI'
  *              title: 'Currently reading',
  *              books: [
  *                {
- *                 title:"To Kill a Mockingbird",
- *                 authors:"Harper Lee",
- *                 imageURL:"",
+ *                  allowAnonLogging:<boolean>
+ *                  authors:Array[1]
+ *                  averageRating:<x.x>
+ *                  canonicalVolumeLink:<url>
+ *                  categories:Array[1]
+ *                  contentVersion:<x.x.x.x.tag.x>
+ *                  description:"Now available for the first time in a mass-market premium paperback edition—master storyteller Stephen King presents the classic #1 New York Times bestseller about a mysterious store than can sell you…"
+ *                  id:<random-unike-id>
+ *                  imageLinks:{…}
+ *                  industryIdentifiers:Array[2]
+ *                  infoLink:<url>
+ *                  language:<lang-shortcut>
+ *                  maturityRating:"NOT_MATURE"
+ *                  pageCount:<integer>
+ *                  previewLink:<url>
+ *                  printType:"BOOK"
+ *                  publishedDate:<date-yyyy-mm-dd>
+ *                  publisher:<string>
+ *                  ratingsCount:<integer>
+ *                  readingModes:{…}
+ *                  shelf:<shelf-name>:"read","currentlyReading","wantToRead"
+ *                  title:<string>
  *                }
  *              ],
  *              synchronized: false,
@@ -31,6 +53,10 @@ class BookStorage {
   }
 
   /**
+   * 
+   * Persist changes to the hole list of books locally
+   * 
+   * Pre requirements:  the books into the shelfs must point to the correct shelf
    * 
    * @param {string} listName 
    * @param {title:string, authors:string, imageURL:string} books
