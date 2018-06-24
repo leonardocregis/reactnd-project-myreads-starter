@@ -21,7 +21,7 @@ class BookShelf extends React.Component {
                 return (
                   <li key={book.title}>
                     <BookItem
-                      imageURL={book.imageURL}
+                      imageURL={book.imageLinks.thumbnail}
                       title={book.title}
                       authors={book.authors}
                       availableActions={this.props.availableActions}
