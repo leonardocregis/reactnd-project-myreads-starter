@@ -69,6 +69,19 @@ class BookStorage {
   }
 
   /**
+   * 
+   * @param {Book} book 
+   * @param {Shelf} shelf 
+   */
+  updateRemoteBook(book, shelf){
+    //TODO create the behavior for updating remote
+    BooksAPI.update(book, shelf).then(() => {
+
+    }).catch(err => {
+      
+    });
+  }
+  /**
    * Try to open a storage, 
    *  case it exists loads what is saved there, 
    *  case it doesnt exists try to creat a new one and load it with the default data definition
