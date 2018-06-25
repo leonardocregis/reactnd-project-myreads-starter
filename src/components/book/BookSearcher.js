@@ -37,13 +37,18 @@ class BookSearcher  extends React.Component {
     console.log('Change chelf called');
   }
 
-  renderBookList(bookList,availableActions) {
-    if (bookList.length > 0) {
+  renderBookList(searchedBooks,availableActions) {
+    const {shelves} = this.props;
+    const recordedBooks = this.mapToBookList(shelves);
+    if (searchedBooks.length > 0) {
       return ( 
         <ol className="books-grid">
         {
-          bookList.map( book => {
-            
+          searchedBooks.map( book => {
+            const alreadySavedBook = recordedBooks.get(book.id);
+            if (alreadySavedBook) {
+              book.shelf = alreadySavedBook.shelf;
+            }
             const actions = availableActions.filter(action => book.shelf !== action.name);
             return (
                 <li key={book.id}>
@@ -73,10 +78,23 @@ class BookSearcher  extends React.Component {
       </div>
     )
   }
+
+  mapToBookList(shelves) {
+    let recordedBooks = new Map();
+    shelves.forEach(shelf => {
+      if (shelf.books) {
+        shelf.books.forEach(book => {
+          recordedBooks.set(book.id, book);
+        });  
+      }
+    });
+    return recordedBooks;
+  }
+
   render() {
       const {query, bookList, loading} = this.state;
       const {availableActions} = this.props;
-
+      
       return (
         <div className="search-books">
         <div className="search-books-bar">
