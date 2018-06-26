@@ -29,38 +29,49 @@ class BooksApp extends React.Component {
       .catch( err => console.log(err));
   }
 
-  changeShelf = (fromShelf, toShelf, book) => {
+  changeShelf = (toShelf, book) => {
+    if (toShelf || toShelf === '') {
+      throw new Error('Cant move to a empty name shelf');
+    }
+    if (book) {
+      throw new Error('Cant move a undefined book to a shelf');
+    }
     if (this.state) {
-      const bookShelves = this.state.bookShelves;
-      let shelfBooksOrigin = bookShelves.get(fromShelf);
-      
-      if (shelfBooksOrigin) {
-        if (shelfBooksOrigin.books) {
-          shelfBooksOrigin.books = shelfBooksOrigin.books.filter(bookVal => bookVal.title !== book.title)
+      let fromShelf = book.shelf;
+      if (fromShelf) {
+        const bookShelves = this.state.bookShelves;
+        let shelfBooksOrigin = bookShelves.get(fromShelf);
+
+        if (shelfBooksOrigin) {
+          if (shelfBooksOrigin.books) {
+            shelfBooksOrigin.books = shelfBooksOrigin.books.filter(bookVal => bookVal.title !== book.title)
+          } else {
+            console.log(`non existing books configurations for: ${fromShelf}`)
+            shelfBooksOrigin.books = [];
+          }
+  
+          bookShelves.set(fromShelf, shelfBooksOrigin);
+  
+  
+          let shelfBooksDestiny = bookShelves.get(toShelf);
+          if (shelfBooksDestiny) {
+            book.shelf = shelfBooksDestiny.name;
+            shelfBooksDestiny.books.unshift(book);
+            bookShelves.set(toShelf, shelfBooksDestiny);
+  
+            this.persistBooks(fromShelf, shelfBooksDestiny, toShelf, shelfBooksOrigin);
+  
+            const newState = bookShelves;
+            this.setState({bookShelves: newState});      
+          } else {
+            throw new Error(`non existing configuration for: ${toShelf}`);
+          }
         } else {
-          console.log(`non existing books configurations for: ${fromShelf}`)
-          shelfBooksOrigin.books = [];
-        }
-
-        bookShelves.set(fromShelf, shelfBooksOrigin);
-
-
-        let shelfBooksDestiny = bookShelves.get(toShelf);
-        if (shelfBooksDestiny) {
-          book.shelf = shelfBooksDestiny.name;
-          shelfBooksDestiny.books.unshift(book);
-          bookShelves.set(toShelf, shelfBooksDestiny);
-
-          this.persistBooks(fromShelf, shelfBooksDestiny, toShelf, shelfBooksOrigin);
-
-          const newState = bookShelves;
-          this.setState({bookShelves: newState});      
-        } else {
-          throw new Error(`non existing configuration for: ${toShelf}`);
-        }
-      } else {
-        throw new Error(`Non existing configuration for: ${fromShelf}`);
+          throw new Error(`Non existing configuration for: ${fromShelf}`);
+        }        
       }
+
+
     }
   }
 
@@ -92,6 +103,7 @@ class BooksApp extends React.Component {
             <BookSearcher
               shelves={bookShelves}
               availableActions={this.extractShelvesNames(bookShelves)}
+              changeShelf={this.changeShelf}
             />
           )}/>
           <Route exact path="/" render={() =>(
