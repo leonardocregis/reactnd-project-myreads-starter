@@ -3,10 +3,8 @@ import BookItem from '../book/BookItem';
 
 class BookShelf extends React.Component {
 
-  changeShelf = ((destinyShelf, bookName) =>{
-    const shelf = this.props.shelf;
-    const book = shelf.books.filter(book => book.title === bookName)[0];
-    this.props.changeShelf(shelf.name, destinyShelf, book);
+  changeShelf = ((shelfName,book) =>{
+    this.props.changeShelf(shelfName, book);
   });
 
   render() {
@@ -22,8 +20,7 @@ class BookShelf extends React.Component {
                   <li key={book.title}>
                     <BookItem
                       imageURL={book.imageLinks.thumbnail}
-                      title={book.title}
-                      authors={book.authors}
+                      book={book}
                       availableActions={this.props.availableActions}
                       changeShelf={this.changeShelf}
                     />

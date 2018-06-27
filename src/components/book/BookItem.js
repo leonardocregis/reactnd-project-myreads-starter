@@ -4,11 +4,12 @@ import BookActionsManager from './BookActionsManager';
 class BookItem  extends React.Component { 
 
     changeShelf(destinyShelf){
-        this.props.changeShelf(destinyShelf, this.props.title);
+        this.props.changeShelf(destinyShelf, this.props.book);
     }
 
     render() {
-        const {title, authors, availableActions, imageURL} = this.props;
+        const {title, authors} = this.props.book;
+        const {availableActions, imageURL} = this.props;
         const urlImage = 'url("'+imageURL+'")';
          return (
             <div className="book">

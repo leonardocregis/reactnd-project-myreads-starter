@@ -33,12 +33,9 @@ class BookSearcher  extends React.Component {
     );
   }
 
-  changeChelf(from, to, book) {
-    console.log('Change chelf called');
-  }
 
   renderBookList(searchedBooks,availableActions) {
-    const {shelves} = this.props;
+    const {shelves, changeShelf} = this.props;
     const recordedBooks = this.mapToBookList(shelves);
     if (searchedBooks.length > 0) {
       return ( 
@@ -54,10 +51,9 @@ class BookSearcher  extends React.Component {
                 <li key={book.id}>
                   <BookItem
                     imageURL={book.imageLinks.thumbnail}
-                    title={book.title}
-                    authors={book.authors}
+                    book={book}
                     availableActions={actions}
-                    changeShelf={this.changeShelf}
+                    changeShelf={changeShelf}
                   />
                 </li>
             )
@@ -94,7 +90,7 @@ class BookSearcher  extends React.Component {
   render() {
       const {query, bookList, loading} = this.state;
       const {availableActions} = this.props;
-      
+
       return (
         <div className="search-books">
         <div className="search-books-bar">

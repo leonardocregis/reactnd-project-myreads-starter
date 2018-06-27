@@ -38,8 +38,9 @@ class BooksApp extends React.Component {
     }
     if (this.state) {
       let fromShelf = book.shelf;
+      const bookShelves = this.state.bookShelves;
+
       if (fromShelf) {
-        const bookShelves = this.state.bookShelves;
         let shelfBooksOrigin = bookShelves.get(fromShelf);
 
         if (shelfBooksOrigin) {
@@ -51,27 +52,35 @@ class BooksApp extends React.Component {
           }
   
           bookShelves.set(fromShelf, shelfBooksOrigin);
-  
-  
-          let shelfBooksDestiny = bookShelves.get(toShelf);
-          if (shelfBooksDestiny) {
-            book.shelf = shelfBooksDestiny.name;
-            shelfBooksDestiny.books.unshift(book);
-            bookShelves.set(toShelf, shelfBooksDestiny);
-  
-            this.persistBooks(fromShelf, shelfBooksDestiny, toShelf, shelfBooksOrigin);
-  
-            const newState = bookShelves;
-            this.setState({bookShelves: newState});      
-          } else {
-            throw new Error(`non existing configuration for: ${toShelf}`);
-          }
+          this.moveToShelf(toShelf, book);
         } else {
           throw new Error(`Non existing configuration for: ${fromShelf}`);
         }        
+      } else {
+        this.moveToShelf(toShelf, book);
       }
+    }
+  }
+  /**
+   * Move to another shelf, update the book shelf itself , persist the change into indexDb
+   */
+  moveToShelf(toShelf, book) {
+    const bookShelves = this.state.bookShelves;
+    const shelfBooksDestiny = bookShelves.get(toShelf);
+    const shelfBooksOrigin = bookShelves.get(book.shelf);
+    const fromShelf = book.shelf;
 
+    if (shelfBooksDestiny) {
+      book.shelf = shelfBooksDestiny.name;
+      shelfBooksDestiny.books.unshift(book);
+      bookShelves.set(toShelf, shelfBooksDestiny);
 
+      this.persistBooks(fromShelf, shelfBooksDestiny, toShelf, shelfBooksOrigin);
+
+      const newState = bookShelves;
+      this.setState({bookShelves: newState});      
+    } else {
+      throw new Error(`non existing configuration for: ${toShelf}`);
     }
   }
 
