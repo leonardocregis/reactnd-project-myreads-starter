@@ -86,7 +86,9 @@ class BooksApp extends React.Component {
 
   persistBooks(fromShelf, shelfBooksDestiny, toShelf, shelfBooksOrigin ) {
     let updates = [];
-    updates.push(this.bookStorage.updateBookList(fromShelf, shelfBooksOrigin));
+    if (fromShelf){
+        updates.push(this.bookStorage.updateBookList(fromShelf, shelfBooksOrigin));
+    }
     updates.push(this.bookStorage.updateBookList(toShelf, shelfBooksDestiny));
     if (updates.length > 0) {
       Promise.all(updates)
