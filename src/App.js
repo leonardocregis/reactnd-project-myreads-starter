@@ -30,10 +30,10 @@ class BooksApp extends React.Component {
   }
 
   changeShelf = (toShelf, book) => {
-    if (toShelf || toShelf === '') {
+    if (!toShelf || toShelf === '') {
       throw new Error('Cant move to a empty name shelf');
     }
-    if (book) {
+    if (!book) {
       throw new Error('Cant move a undefined book to a shelf');
     }
     if (this.state) {
