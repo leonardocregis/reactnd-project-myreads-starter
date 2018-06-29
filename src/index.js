@@ -7,7 +7,7 @@ import BookStorage from './database/BookStorage';
 import IndexDbHelper from './database/indexDbHelper';
 
 const bookShelves = new Map();
-const bookStorage = new BookStorage('myShelf',IndexDbHelper);
+const bookStorage = new BookStorage('myShelf',IndexDbHelper, window);
 
 ReactDOM.render(
     <BrowserRouter>

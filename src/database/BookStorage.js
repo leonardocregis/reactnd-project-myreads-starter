@@ -48,9 +48,9 @@ import * as BooksAPI from '../api/BooksAPI'
  */
 class BookStorage {
   defaultBookShelves = new DefaultBookShelves();
-  constructor(storageName, bookShelveLocalDb){
+  constructor(storageName, bookShelveLocalDb, refWindow){
       this.storageName = storageName;
-      this.bookShelveDb = new bookShelveLocalDb(window, this.storageName);
+      this.bookShelveDb = new bookShelveLocalDb(refWindow, this.storageName);
   }
 
   /**
