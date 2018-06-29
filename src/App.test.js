@@ -13,6 +13,11 @@ import { BrowserRouter } from 'react-router-dom'
 let mockWindow = {};
 mockWindow.indexedDB = FakeIndexDB;
 const bookShelves = new Map();
+const indexDbHelper = new IndexDbHelper(mockWindow, 'myShelf');
+indexDbHelper.insert({name:'currentlyReading', value: undefined})
+indexDbHelper.insert({name:'wantToRead', value: undefined})
+indexDbHelper.insert({name:'read', value: undefined})
+
 const bookStorage = new BookStorage('myShelf',IndexDbHelper, mockWindow);
 
 it('renders without crashing', () => {
