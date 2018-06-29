@@ -4,9 +4,10 @@ import App from './App'
 import './styles/index.css'
 import { BrowserRouter } from 'react-router-dom'
 import BookStorage from './database/BookStorage';
+import IndexDbHelper from './database/indexDbHelper';
 
 const bookShelves = new Map();
-const bookStorage = new BookStorage('myShelf');
+const bookStorage = new BookStorage('myShelf',IndexDbHelper);
 
 ReactDOM.render(
     <BrowserRouter>
