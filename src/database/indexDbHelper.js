@@ -89,6 +89,9 @@ class IndexDbHelper {
   insert(data){
     return new Promise((resolve, reject) => {
       console.log('inserting values');
+      if (!this.db) {
+        throw new Error('Cant insert Db not initialized');
+      }
       const transaction = this.db.transaction(this.shelfName, 'readwrite');
       const customerObjectStore = transaction.objectStore(this.shelfName);
       customerObjectStore.add(data);
