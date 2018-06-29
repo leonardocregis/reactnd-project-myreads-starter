@@ -9,15 +9,14 @@ class BooksApp extends React.Component {
   
   constructor(props) {
     super(props);
-    if (props.bookShelves && props.bookStorage && props.bookUtils) {
+    if (props.bookShelves && props.bookStorage) {
       this.bookShelves = props.bookShelves;
       this.bookStorage = props.bookStorage;
-      this.bookUtils = props.bookUtils;
       this.state = {
         bookShelves: this.bookShelves
       }  
     } else {
-      throw new Error('Undefined properties to start the component')
+      throw new Error('Undefined properties to start the component, contact the ')
     }
   }
 
