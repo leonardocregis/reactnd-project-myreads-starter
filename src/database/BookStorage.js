@@ -106,10 +106,18 @@ class BookStorage {
               }).catch( err => 
                   {
                     this.fetchStoredShelfs().then( shelfs => {
-                      shelfs.forEach( shelf => {
-                        let auxShelf = shelfMap.get(shelf.shelf);
-                        auxShelf.books = shelf.value.books;      
-                      });
+                      if (shelfs) {
+                        shelfs.forEach( (shelf, key) => {
+                          if (shelf) {
+                            let auxShelf = shelfMap.get(shelf.shelf);
+                            auxShelf.books = shelf.value.books;                              
+                          } else {
+                            console.warn(`chelf Key[${key}] shouldnt have values undefined `);
+                          }
+                        });  
+                      } else {
+                        throw new Error('No shelfs found');
+                      }
                     }).catch(err => reject(err));
                   }
                 );
