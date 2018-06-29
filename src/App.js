@@ -4,17 +4,21 @@ import BookWardrobe from './components/wardrobe/BookWardrobe';
 import {Route} from 'react-router-dom';
 import './styles/App.css';
 import BookSearcher from './components/book/BookSearcher';
-import BookStorage from './database/BookStorage';
-import BookUtils from "./components/book/BookUtils";
 
 class BooksApp extends React.Component {
-
-  bookShelves = new Map();
-  bookStorage = new BookStorage('myShelf');
-  bookUtils = new BookUtils();
-
-  state = {
-    bookShelves: this.bookShelves
+  
+  constructor(props) {
+    super(props);
+    if (props.bookShelves && props.bookStorage && props.bookUtils) {
+      this.bookShelves = props.bookShelves;
+      this.bookStorage = props.bookStorage;
+      this.bookUtils = props.bookUtils;
+      this.state = {
+        bookShelves: this.bookShelves
+      }  
+    } else {
+      throw new Error('Undefined properties to start the component')
+    }
   }
 
   componentDidMount() {
