@@ -1,4 +1,3 @@
-import IndexDbHelper from './indexDbHelper';
 import DefaultBookShelves from './DefaultBookShelves';
 import * as BooksAPI from '../api/BooksAPI'
 
@@ -49,9 +48,9 @@ import * as BooksAPI from '../api/BooksAPI'
  */
 class BookStorage {
   defaultBookShelves = new DefaultBookShelves();
-  constructor(storageName){
+  constructor(storageName, bookShelveLocalDb){
       this.storageName = storageName;
-      this.bookShelveDb = new IndexDbHelper(window, this.storageName);
+      this.bookShelveDb = new bookShelveLocalDb(window, this.storageName);
   }
 
   /**
