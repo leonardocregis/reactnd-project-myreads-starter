@@ -123,7 +123,7 @@ class BookStorage {
                 );
             }
           ).catch(err => {
-              console.log('warning creating db wasnt possible', err);
+              console.error('warning creating db wasnt possible', err);
               resolve(this.buildFullDefaultShelf());
             }
           );

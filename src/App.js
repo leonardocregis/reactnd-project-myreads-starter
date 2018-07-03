@@ -29,7 +29,7 @@ class BooksApp extends React.Component {
         });
         this.setState({bookShelves:map});
       })
-      .catch( err => console.log(err));
+      .catch( err => console.error(err));
   }
 
   changeShelf = (toShelf, book) => {
@@ -50,7 +50,7 @@ class BooksApp extends React.Component {
           if (shelfBooksOrigin.books) {
             shelfBooksOrigin.books = shelfBooksOrigin.books.filter(bookVal => bookVal.title !== book.title)
           } else {
-            console.log(`non existing books configurations for: ${fromShelf}`)
+            console.error(`non existing books configurations for: ${fromShelf}`)
             shelfBooksOrigin.books = [];
           }
   
@@ -96,7 +96,7 @@ class BooksApp extends React.Component {
     if (updates.length > 0) {
       Promise.all(updates)
         .then( data => console.log(`saved with sucess ${data}`))
-        .catch( err=> console.log(err));
+        .catch( err=> console.error(err));
     }
   }
 
