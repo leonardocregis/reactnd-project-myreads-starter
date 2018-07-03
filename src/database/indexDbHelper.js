@@ -37,7 +37,6 @@ class IndexDbHelper {
     let hasUpgrade = false;//suposed that the event onUpgradeneeded always happens before onsucess
     let upgradedPromise = new Promise((resolve, reject) => {
       openDBRequest.onupgradeneeded = (event) => {
-        console.log('creating structure');
         hasUpgrade = true;
         this.db = event.target.result;
         this.objStore = this.db.createObjectStore(this.shelfName, { keyPath: "name" });
@@ -54,7 +53,6 @@ class IndexDbHelper {
         reject(new Error(event.target.error));
       };
       openDBRequest.onsuccess = (event) => {
-        console.log('connection created');
         this.dbOpen = true;
         this.db = event.target.result;
         if (hasUpgrade) {
@@ -71,7 +69,6 @@ class IndexDbHelper {
 
   update(data){
     return new Promise((resolve, reject) => {
-      console.log('inserting values');
       const transaction = this.db.transaction(this.shelfName, 'readwrite');
       const customerObjectStore = transaction.objectStore(this.shelfName);
       customerObjectStore.put(data);
@@ -88,7 +85,6 @@ class IndexDbHelper {
 
   insert(data){
     return new Promise((resolve, reject) => {
-      console.log('inserting values');
       if (!this.db) {
         throw new Error('Cant insert Db not initialized');
       }
@@ -104,7 +100,6 @@ class IndexDbHelper {
 
   delete(index) {
     return new Promise((resolve, reject) => {
-      console.log('deleting index', index);
       const transaction = this.db.transaction(this.shelfName, 'readwrite');
       const customerObjectStore = transaction.objectStore(this.shelfName);
       customerObjectStore.del(index);
@@ -122,7 +117,6 @@ class IndexDbHelper {
 
   fetchData(index) {
     if(this.dbOpen) {
-      console.log('fetching index', index);
       return new Promise((resolve,reject) => {
         const transaction = this.db.transaction([this.shelfName]);
         const objectStore = transaction.objectStore(this.shelfName);
