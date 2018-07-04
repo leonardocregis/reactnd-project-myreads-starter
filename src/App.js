@@ -21,8 +21,7 @@ class BooksApp extends React.Component {
 
   render() {
     return (
-      <div className="app">
-        <BookStructureManager
+      <BookStructureManager
          bookShelves={this.bookShelves}
          bookStorage={this.bookStorage}
          render={(bookShelves, changeShelf, extractShelvesNames)=> (
@@ -43,7 +42,6 @@ class BooksApp extends React.Component {
             )}/>
           </div>
         )}/>
-      </div>
     )
   }
 }
