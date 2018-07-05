@@ -109,7 +109,11 @@ class BookStorage {
                       if (shelfs) {
                         shelfs.forEach( (shelf, key) => {
                           if (shelf) {
-                            let auxShelf = shelfMap.get(shelf.shelf);
+                            let auxShelf = shelfMap.get(shelf.name);
+                            if (!auxShelf) {
+                              console.error(shelfs);
+                              console.warn(`Not found into shelfMap for the key ${shelf.shelf}`)
+                            }
                             auxShelf.books = shelf.value.books;                              
                           } else {
                             console.warn(`chelf Key[${key}] shouldnt have values undefined `);
