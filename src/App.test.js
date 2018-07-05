@@ -34,16 +34,15 @@ describe ('Testing indexDb', () =>{
           indexDbHelper.insert({name:'read', value: bookShelf.get('read')})
         ]).then(() =>
           expect(true).toBe(true)
-        ).catch((err) => {
-          console.error(err);
-          expect(false).toBe(false)
+        ).catch(() => {
+          expect(false).toBe(true)
         })
       .catch(err => console.error(err))
     })
   })
 })
 
-xit('renders without crashing', () => {
+it('renders without crashing', () => {
   const div = document.createElement('div')
   ReactDOM.render(
     <BrowserRouter>
