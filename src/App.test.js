@@ -6,11 +6,9 @@ import FakeIndexDB from 'fake-indexeddb';
 import IndexDbHelper from './database/indexDbHelper';
 import { BrowserRouter } from 'react-router-dom'
 import DefaultBookShelves from './database/DefaultBookShelves';
-import BookWardrobe from './components/wardrobe/BookWardrobe';
-import {shallow, configure} from 'enzyme';
-import Adapter from 'enzyme-adapter-react-15';
 import BookStructureManager from './BookStructureManager';
-configure({ adapter: new Adapter() });
+import {render, cleanup} from 'react-testing-library'
+
 /** 
  This course is not designed to teach Test Driven Development. 
  Feel free to use this file to test your application, but it 
@@ -22,23 +20,21 @@ mockWindow.indexedDB = FakeIndexDB;
 const indexDbHelper = new IndexDbHelper(mockWindow, 'myShelf');
 const bookShelf = new DefaultBookShelves().buildFullDefaultShelf();
 const bookStorage = new BookStorage('myShelf',IndexDbHelper, mockWindow);
-
-describe ('Testing indexDb', () =>{
-  it('is loaded correctly the shelfs', () => {
-    expect.assertions(1);
-    return indexDbHelper.open('myShelf')
-      .then(()=>{
-        return Promise.all([
-          indexDbHelper.insert({name:'currentlyReading', value: bookShelf.get('currentlyReading')}),
-          indexDbHelper.insert({name:'wantToRead', value: bookShelf.get('wantToRead')}),
-          indexDbHelper.insert({name:'read', value: bookShelf.get('read')})
-        ]).then(() =>
-          expect(true).toBe(true)
-        ).catch(() => {
-          expect(false).toBe(true)
-        })
-      .catch(err => console.error(err))
+beforeAll(()=> {
+  return indexDbHelper.open('myShelf')
+    .then(()=>{
+      return Promise.all([
+        indexDbHelper.insert({name:'currentlyReading', value: bookShelf.get('currentlyReading')}),
+        indexDbHelper.insert({name:'wantToRead', value: bookShelf.get('wantToRead')}),
+        indexDbHelper.insert({name:'read', value: bookShelf.get('read')})
+      ])
     })
+})
+afterEach(cleanup);
+describe ('Testing indexDb', () =>{
+  it('is loaded without error the shelfs', () => {
+    expect.assertions(1);
+    return indexDbHelper.fetchData('currentlyReading').then(data => expect(data).toEqual({name:'currentlyReading', value:bookShelf.get('currentlyReading')}));
   })
 })
 
@@ -53,13 +49,24 @@ it('renders without crashing', () => {
     </BrowserRouter>, div)
 })
 
-xit('renders the default books', () => {
-  const wrapper = shallow(
+it('renders the default books', () => {
+  const {getByTestId} = render(
     <BookStructureManager 
       bookShelves={bookShelves}
       bookStorage={bookStorage}
       render = {()=> {}}
     />
   );
-  expect(wrapper.props.bookShelves).toEqual(bookShelves);
+  expect(getByTestId('book-structure-manager')).toBeEmpty();
+})
+it('renders the default books', () => {
+  const {getByTestId} = render(
+    <BrowserRouter>
+    <BooksApp 
+      bookShelves={bookShelves}
+      bookStorage={bookStorage}
+    />
+    </BrowserRouter>
+  );
+  expect(getByTestId('book-structure-manager')).toBeEmpty();
 })

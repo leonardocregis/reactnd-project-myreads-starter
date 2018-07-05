@@ -92,7 +92,7 @@ class BookSearcher  extends React.Component {
       const {availableActions} = this.props;
 
       return (
-        <div className="search-books">
+        <div data-testid="book-searcher" className="search-books">
         <div className="search-books-bar">
           <Link
             to="/"

@@ -105,7 +105,7 @@ class BookStructureManager extends React.Component {
 
     render() {
         return (
-            <div className="app">
+            <div data-testid="book-structure-manager" className="app">
             {
                 this.props.render(this.state.bookShelves, this.changeShelf, this.extractShelvesNames)
             }

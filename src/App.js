@@ -4,6 +4,7 @@ import {Route} from 'react-router-dom';
 import './styles/App.css';
 import BookSearcher from './components/book/BookSearcher';
 import BookStructureManager from './BookStructureManager';
+import 'jest-dom/extend-expect'
 
 class BooksApp extends React.Component {
   constructor(props) {
@@ -26,15 +27,16 @@ class BooksApp extends React.Component {
          bookStorage={this.bookStorage}
          render={(bookShelves, changeShelf, extractShelvesNames)=> (
            <div>
-            <Route path="/search" render={() => (
+            <Route path="/search" data-testid="route-search" render={() => (
               <BookSearcher
                 shelves={bookShelves}
                 availableActions={extractShelvesNames(bookShelves)}
                 changeShelf={changeShelf}
               />
             )}/>
-            <Route exact path="/" render={() =>(
+            <Route exact path="/" data-testid="route-root" render={() =>(
               <BookWardrobe
+                data-testid="book-wardrobe"
                 title="My reads"
                 shelves={bookShelves}
                 changeShelf={changeShelf}
