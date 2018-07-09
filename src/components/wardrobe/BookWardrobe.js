@@ -7,14 +7,17 @@ class  BookWardrobe extends React.Component {
 
     render() {
         let shelves = [];
-        this.props.shelves.forEach((shelve) => {
-            shelves.push(shelve);
-        });
+        const {title, changeShelf} = this.props;
+        if (this.props.shelves) {
+            this.props.shelves.forEach((shelve) => {
+                shelves.push(shelve);
+            });    
+        }
         const bookUtils = new BookUtils(shelves);
         return (
             <div className="list-books" data-testid="book-wardrobe">
                 <div className="list-books-title">
-                <h1>{this.props.title}</h1>
+                <h1>{title}</h1>
                 </div>
                 <div className="list-books-content">
                 <div>
@@ -24,7 +27,7 @@ class  BookWardrobe extends React.Component {
                                 return (<div key={shelf.name}> 
                                             <BookShelf
                                              shelf={shelf}
-                                             changeShelf={this.props.changeShelf}
+                                             changeShelf={changeShelf}
                                              availableActions={bookUtils.filterAction(shelf.name)}
                                              />
                                         </div>)
