@@ -3,6 +3,11 @@ import BookShelf from '../shelf/BookShelf';
 import {Link} from 'react-router-dom';
 import BookUtils from '../book/BookUtils';
 
+/**
+ * Parameters :
+ * shelfes: Map of { name:<string>, title:<string>, books:[<book>]}
+ * title: <string>
+ */
 class  BookWardrobe extends React.Component {
 
     render() {
