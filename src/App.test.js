@@ -8,7 +8,7 @@ import { BrowserRouter } from 'react-router-dom'
 import DefaultBookShelves from './database/DefaultBookShelves';
 import BookStructureManager from './BookStructureManager';
 import {render, cleanup} from 'react-testing-library'
-
+import BookWardrobe from './components/wardrobe/BookWardrobe';
 /** 
  This course is not designed to teach Test Driven Development. 
  Feel free to use this file to test your application, but it 
@@ -59,14 +59,30 @@ it('renders the default books', () => {
   );
   expect(getByTestId('book-structure-manager')).toBeEmpty();
 })
-it('renders the default books', () => {
-  const {getByTestId} = render(
+it('renders something', () => {
+  const {getByTestId} =  render(
     <BrowserRouter>
-    <BooksApp 
-      bookShelves={bookShelves}
-      bookStorage={bookStorage}
-    />
+      <BooksApp 
+        bookShelves={bookShelves}
+        bookStorage={bookStorage}
+      />
     </BrowserRouter>
   );
-  expect(getByTestId('book-structure-manager')).toBeEmpty();
+  expect(getByTestId('book-structure-manager')).not.toBeEmpty();
+})
+it('renders the Book Wardrobe with no books', () => {
+    const title = 'Test Title';
+    const shelves = new Map();
+    const shelve =  {name: 'Sample Shelf', title:'Sample Shelf title', books:[]}
+    shelves.set(shelve.name, shelve);
+    
+    const {getByText} =  render(
+    <BrowserRouter>
+        <BookWardrobe
+            title = {title}
+            shelves = {shelves}
+        />
+    </BrowserRouter>
+  );
+  expect(getByText('Undefined Shelf')).not.toBeEmpty();
 })
