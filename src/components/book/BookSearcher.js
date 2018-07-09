@@ -48,7 +48,7 @@ class BookSearcher  extends React.Component {
             }
             const actions = availableActions.filter(action => book.shelf !== action.name);
             return (
-                <li key={book.id}>
+                <li key={book.id} data-testid="book-searcher">
                   <BookItem
                     imageURL={book.imageLinks.thumbnail}
                     book={book}

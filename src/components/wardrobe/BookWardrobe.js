@@ -12,7 +12,7 @@ class  BookWardrobe extends React.Component {
         });
         const bookUtils = new BookUtils(shelves);
         return (
-            <div className="list-books">
+            <div className="list-books" data-testid="book-wardrobe">
                 <div className="list-books-title">
                 <h1>{this.props.title}</h1>
                 </div>

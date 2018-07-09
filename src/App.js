@@ -27,16 +27,15 @@ class BooksApp extends React.Component {
          bookStorage={this.bookStorage}
          render={(bookShelves, changeShelf, extractShelvesNames)=> (
            <div>
-            <Route path="/search" data-testid="route-search" render={() => (
+            <Route path="/search" render={() => (
               <BookSearcher
                 shelves={bookShelves}
                 availableActions={extractShelvesNames(bookShelves)}
                 changeShelf={changeShelf}
               />
             )}/>
-            <Route exact path="/" data-testid="route-root" render={() =>(
+            <Route exact path="/" render={() =>(
               <BookWardrobe
-                data-testid="book-wardrobe"
                 title="My reads"
                 shelves={bookShelves}
                 changeShelf={changeShelf}
