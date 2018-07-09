@@ -86,3 +86,29 @@ it('renders the Book Wardrobe with no books', () => {
   );
   expect(getByText('Undefined Shelf')).not.toBeEmpty();
 })
+
+it('renders the Book Wardrobe with one book', () => {
+  const title = 'Test Title';
+  const shelves = new Map();
+  const book = {
+    title: "Ender's Game",
+    authors: "Orson Scott Card",
+    imageLinks: {
+      thumbnail: "http://books.google.com/books/content?id=yDtCuFHXbAYC&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE72RRiTR6U5OUg3IY_LpHTL2NztVWAuZYNFE8dUuC0VlYabeyegLzpAnDPeWxE6RHi0C2ehrR9Gv20LH2dtjpbcUcs8YnH5VCCAH0Y2ICaKOTvrZTCObQbsfp4UbDqQyGISCZfGN&source=gbs_api"
+    },
+    shelf: "currentlyReading"
+  } 
+  const shelve =  {name: 'Sample Shelf', title:'Sample Shelf title', books:[book]}
+
+  shelves.set(shelve.name, shelve);
+  
+  const {getByText} =  render(
+  <BrowserRouter>
+      <BookWardrobe
+          title = {title}
+          shelves = {shelves}
+      />
+  </BrowserRouter>
+  );
+  expect(getByText('Sample Shelf title')).not.toBeEmpty();
+})
