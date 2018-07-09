@@ -8,7 +8,7 @@ class BookShelf extends React.Component {
   });
 
   render() {
-    const {shelf, availableActions} = this.props.shelf;
+    const {shelf, availableActions} = this.props;
     if (shelf) {
       return this.renderShelf(shelf, availableActions);
     } else {
