@@ -8,9 +8,9 @@ class BookShelf extends React.Component {
   });
 
   render() {
-    const shelf = this.props.shelf;
+    const {shelf, availableActions} = this.props.shelf;
     return (
-      <div className="bookshelf">
+      <div className="bookshelf" data-testid="book-shelf">
         <h2 className="bookshelf-title">{shelf.title}</h2>
         <div className="bookshelf-books">
           <ol className="books-grid">
@@ -21,7 +21,7 @@ class BookShelf extends React.Component {
                     <BookItem
                       imageURL={book.imageLinks.thumbnail}
                       book={book}
-                      availableActions={this.props.availableActions}
+                      availableActions={availableActions}
                       changeShelf={this.changeShelf}
                     />
                   </li>
