@@ -85,7 +85,7 @@ it('renders the Book Wardrobe with no books', () => {
         />
     </BrowserRouter>
   );
-  expect(getByText('Undefined Shelf')).not.toBeEmpty();
+  expect(getByText('Sample Shelf title')).not.toBeEmpty();
 })
 
 it('renders the Book Wardrobe with one book', () => {
