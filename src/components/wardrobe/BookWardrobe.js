@@ -28,14 +28,18 @@ class  BookWardrobe extends React.Component {
                 <div>
                     {
                     shelves &&
-                    shelves.map( shelf => {
-                                return (<div key={shelf.name}> 
-                                            <BookShelf
-                                             shelf={shelf}
-                                             changeShelf={changeShelf}
-                                             availableActions={bookUtils.filterAction(shelf.name)}
-                                             />
-                                        </div>)
+                    shelves.map( (shelf,index) => {
+                                if (shelf) {
+                                    return (<div key={shelf.name}> 
+                                        <BookShelf
+                                         shelf={shelf}
+                                         changeShelf={changeShelf}
+                                         availableActions={bookUtils.filterAction(shelf.name)}
+                                         />
+                                    </div>)
+                                } else {
+                                    return (<div key={index}><BookShelf/></div>)
+                                }
                     })
                 }
                 </div>
