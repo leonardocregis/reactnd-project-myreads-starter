@@ -70,6 +70,7 @@ it('renders something', () => {
   );
   expect(getByTestId('book-structure-manager')).not.toBeEmpty();
 })
+
 it('renders the Book Wardrobe with no books', () => {
     const title = 'Test Title';
     const shelves = new Map();
@@ -111,4 +112,19 @@ it('renders the Book Wardrobe with one book', () => {
   </BrowserRouter>
   );
   expect(getByText('Sample Shelf title')).not.toBeEmpty();
+})
+it('show error for undefined shelf', () => {
+  const title = 'Test Title';
+  const shelves = new Map();
+  shelves.set('Sample Shelf', undefined);
+  
+  const {getByText} =  render(
+  <BrowserRouter>
+      <BookWardrobe
+          title = {title}
+          shelves = {shelves}
+      />
+  </BrowserRouter>
+);
+expect(getByText('Undefined Shelf')).not.toBeEmpty();
 })
