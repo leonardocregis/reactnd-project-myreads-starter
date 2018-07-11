@@ -112,6 +112,7 @@ it('renders the Book Wardrobe with one book', () => {
   </BrowserRouter>
   );
   expect(getByText('Sample Shelf title')).not.toBeEmpty();
+  expect(getByText("Ender's Game")).not.toBeEmpty();
 })
 it('show error for undefined shelf', () => {
   const title = 'Test Title';
