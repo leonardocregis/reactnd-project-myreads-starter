@@ -38,94 +38,100 @@ describe ('Testing indexDb', () =>{
   })
 })
 
-it('renders without crashing', () => {
-  const div = document.createElement('div')
-  ReactDOM.render(
-    <BrowserRouter>
-      <BooksApp 
-        bookShelves={bookShelves}
-        bookStorage={bookStorage}
-      />
-    </BrowserRouter>, div)
-})
-
-it('renders the default books', () => {
-  const {getByTestId} = render(
-    <BookStructureManager 
-      bookShelves={bookShelves}
-      bookStorage={bookStorage}
-      render = {()=> {}}
-    />
-  );
-  expect(getByTestId('book-structure-manager')).toBeEmpty();
-})
-it('renders something', () => {
-  const {getByTestId} =  render(
-    <BrowserRouter>
-      <BooksApp 
-        bookShelves={bookShelves}
-        bookStorage={bookStorage}
-      />
-    </BrowserRouter>
-  );
-  expect(getByTestId('book-structure-manager')).not.toBeEmpty();
-})
-
-it('renders the Book Wardrobe with no books', () => {
-    const title = 'Test Title';
-    const shelves = new Map();
-    const shelve =  {name: 'Sample Shelf', title:'Sample Shelf title', books:[]}
-    shelves.set(shelve.name, shelve);
-    
-    const {getByText} =  render(
-    <BrowserRouter>
-        <BookWardrobe
-            title = {title}
-            shelves = {shelves}
+describe ('Testing React Components', () => {
+  it('renders without crashing', () => {
+    const div = document.createElement('div')
+    ReactDOM.render(
+      <BrowserRouter>
+        <BooksApp 
+          bookShelves={bookShelves}
+          bookStorage={bookStorage}
         />
-    </BrowserRouter>
-  );
-  expect(getByText('Sample Shelf title')).not.toBeEmpty();
-})
-
-it('renders the Book Wardrobe with one book', () => {
-  const title = 'Test Title';
-  const shelves = new Map();
-  const book = {
-    title: "Ender's Game",
-    authors: "Orson Scott Card",
-    imageLinks: {
-      thumbnail: "http://books.google.com/books/content?id=yDtCuFHXbAYC&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE72RRiTR6U5OUg3IY_LpHTL2NztVWAuZYNFE8dUuC0VlYabeyegLzpAnDPeWxE6RHi0C2ehrR9Gv20LH2dtjpbcUcs8YnH5VCCAH0Y2ICaKOTvrZTCObQbsfp4UbDqQyGISCZfGN&source=gbs_api"
-    },
-    shelf: "currentlyReading"
-  } 
-  const shelve =  {name: 'Sample Shelf', title:'Sample Shelf title', books:[book]}
-
-  shelves.set(shelve.name, shelve);
+      </BrowserRouter>, div)
+  })
   
-  const {getByText} =  render(
-  <BrowserRouter>
-      <BookWardrobe
-          title = {title}
-          shelves = {shelves}
+  it('renders the default books', () => {
+    const {getByTestId} = render(
+      <BookStructureManager 
+        bookShelves={bookShelves}
+        bookStorage={bookStorage}
+        render = {()=> {}}
       />
-  </BrowserRouter>
-  );
-  expect(getByText('Sample Shelf title')).not.toBeEmpty();
-  expect(getByText("Ender's Game")).not.toBeEmpty();
-})
-it('show error for undefined shelf', () => {
-  const title = 'Test Title';
-  const shelves = new Map();
-  shelves.set('Sample Shelf', undefined);
+    );
+    expect(getByTestId('book-structure-manager')).toBeEmpty();
+  })
+  it('renders something', () => {
+    const {getByTestId} =  render(
+      <BrowserRouter>
+        <BooksApp 
+          bookShelves={bookShelves}
+          bookStorage={bookStorage}
+        />
+      </BrowserRouter>
+    );
+    expect(getByTestId('book-structure-manager')).not.toBeEmpty();
+  })
+  describe('Testing book wardrobe', () => {
+    it('renders the Book Wardrobe with no books', () => {
+      const title = 'Test Title';
+      const shelves = new Map();
+      const shelve =  {name: 'Sample Shelf', title:'Sample Shelf title', books:[]}
+      shelves.set(shelve.name, shelve);
+      
+      const {getByText} =  render(
+        <BrowserRouter>
+            <BookWardrobe
+                title = {title}
+                shelves = {shelves}
+            />
+        </BrowserRouter>
+      );
+      expect(getByText('Sample Shelf title')).not.toBeEmpty();
+    })
   
-  const {getByText} =  render(
-  <BrowserRouter>
-      <BookWardrobe
-          title = {title}
-          shelves = {shelves}
-      />
-  </BrowserRouter>
-);
-expect(getByText('Undefined Shelf')).not.toBeEmpty();
+    it('renders the Book Wardrobe with one book', () => {
+      const title = 'Test Title';
+      const shelves = new Map();
+      const book = {
+        title: "Ender's Game",
+        authors: "Orson Scott Card",
+        imageLinks: {
+          thumbnail: "http://books.google.com/books/content?id=yDtCuFHXbAYC&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE72RRiTR6U5OUg3IY_LpHTL2NztVWAuZYNFE8dUuC0VlYabeyegLzpAnDPeWxE6RHi0C2ehrR9Gv20LH2dtjpbcUcs8YnH5VCCAH0Y2ICaKOTvrZTCObQbsfp4UbDqQyGISCZfGN&source=gbs_api"
+        },
+        shelf: "currentlyReading"
+      } 
+      const shelve =  {name: 'Sample Shelf', title:'Sample Shelf title', books:[book]}
+    
+      shelves.set(shelve.name, shelve);
+      
+      const {getByText} =  render(
+      <BrowserRouter>
+          <BookWardrobe
+              title = {title}
+              shelves = {shelves}
+          />
+      </BrowserRouter>
+      );
+      expect(getByText('Sample Shelf title')).not.toBeEmpty();
+      expect(getByText("Ender's Game")).not.toBeEmpty();
+      expect(getByText("Orson Scott Card")).not.toBeEmpty();
+    })
+    it('show error for undefined shelf', () => {
+      const title = 'Test Title';
+      const shelves = new Map();
+      shelves.set('Sample Shelf', undefined);
+      
+      const {getByText} =  render(
+        <BrowserRouter>
+            <BookWardrobe
+                title = {title}
+                shelves = {shelves}
+            />
+        </BrowserRouter>
+      );
+      expect(getByText('Undefined Shelf')).not.toBeEmpty();
+      })    
+    })
+  
+
 })
