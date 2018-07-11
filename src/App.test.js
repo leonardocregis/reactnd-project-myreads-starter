@@ -9,6 +9,7 @@ import DefaultBookShelves from './database/DefaultBookShelves';
 import BookStructureManager from './BookStructureManager';
 import {render, cleanup} from 'react-testing-library'
 import BookWardrobe from './components/wardrobe/BookWardrobe';
+import BookSearcher from './components/book/BookSearcher';
 /** 
  This course is not designed to teach Test Driven Development. 
  Feel free to use this file to test your application, but it 
@@ -131,7 +132,28 @@ describe ('Testing React Components', () => {
       );
       expect(getByText('Undefined Shelf')).not.toBeEmpty();
       })    
+  })
+  describe('Testing book storage', ()=> {
+    it('book search loads default page', ()=> {
+      const {getByText} =  render(
+        <BrowserRouter>
+          <BookStructureManager 
+            bookShelves={bookShelves}
+            bookStorage={bookStorage}
+            render={(bookShelves, changeShelf, extractShelvesNames)=> (
+              <div> 
+                <BookSearcher
+                    shelves={bookShelves}
+                    availableActions={extractShelvesNames(['Shelf1','Shelf2'])}
+                    changeShelf={changeShelf}
+                />
+              </div>
+            )}/>
+        </BrowserRouter>);
+      expect(getByText('No Results')).not.toBeEmpty();
     })
-  
+
+    
+  })
 
 })
