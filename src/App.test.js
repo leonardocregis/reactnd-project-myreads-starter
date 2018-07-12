@@ -7,7 +7,7 @@ import IndexDbHelper from './database/indexDbHelper';
 import { BrowserRouter } from 'react-router-dom'
 import DefaultBookShelves from './database/DefaultBookShelves';
 import BookStructureManager from './BookStructureManager';
-import {render, cleanup, fireEvent} from 'react-testing-library'
+import {render, cleanup, fireEvent, waitForElement} from 'react-testing-library'
 import BookWardrobe from './components/wardrobe/BookWardrobe';
 import BookSearcher from './components/book/BookSearcher';
 /** 
@@ -152,7 +152,8 @@ describe ('Testing React Components', () => {
         </BrowserRouter>);
       expect(getByText('No Results')).not.toBeEmpty();
     })
-    it('book search has books', ()=> {
+    it('book search has books', async ()=> {
+      //Arrange
       const book = {
         title: "Ender's Game",
         authors: "Orson Scott Card",
@@ -164,7 +165,7 @@ describe ('Testing React Components', () => {
       const shelve =  {name: 'Sample Shelf', title:'Sample Shelf title', books:[book]}
       
       bookShelves.set('Sample Shelf', shelve);
-      const {getByText, getByPlaceholderText } =  render(
+      const {getByText, getByPlaceholderText, container } =  render(
         <BrowserRouter>
           <BookStructureManager 
             bookShelves={bookShelves}
@@ -183,7 +184,16 @@ describe ('Testing React Components', () => {
 
         const input = getByPlaceholderText("Search by title or author, min 3 chars");
         input.value = 'Ender';
+
+        //Act
         fireEvent.change(input);
+
+        //Assert
+        const result = await  waitForElement(() =>
+          getByPlaceholderText("Search by title or author, min 3 chars")
+        );
+        console.log(container.innerHTML);
+        expect(getByPlaceholderText("Search by title or author, min 3 chars")).toHaveTextContent('Ender');
       })
   })
 
