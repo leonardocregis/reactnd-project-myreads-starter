@@ -192,8 +192,7 @@ describe ('Testing React Components', () => {
         const result = await  waitForElement(() =>
           getByPlaceholderText("Search by title or author, min 3 chars")
         );
-        console.log(container.innerHTML);
-        expect(getByPlaceholderText("Search by title or author, min 3 chars")).toHaveTextContent('Ender');
+        expect(result.value).toEqual('Ender');
       })
   })
 
