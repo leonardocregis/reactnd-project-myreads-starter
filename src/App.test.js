@@ -7,7 +7,7 @@ import IndexDbHelper from './database/indexDbHelper';
 import { BrowserRouter } from 'react-router-dom'
 import DefaultBookShelves from './database/DefaultBookShelves';
 import BookStructureManager from './BookStructureManager';
-import {render, cleanup} from 'react-testing-library'
+import {render, cleanup, fireEvent} from 'react-testing-library'
 import BookWardrobe from './components/wardrobe/BookWardrobe';
 import BookSearcher from './components/book/BookSearcher';
 /** 
@@ -152,8 +152,39 @@ describe ('Testing React Components', () => {
         </BrowserRouter>);
       expect(getByText('No Results')).not.toBeEmpty();
     })
+    it('book search has books', ()=> {
+      const book = {
+        title: "Ender's Game",
+        authors: "Orson Scott Card",
+        imageLinks: {
+          thumbnail: "http://books.google.com/books/content?id=yDtCuFHXbAYC&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE72RRiTR6U5OUg3IY_LpHTL2NztVWAuZYNFE8dUuC0VlYabeyegLzpAnDPeWxE6RHi0C2ehrR9Gv20LH2dtjpbcUcs8YnH5VCCAH0Y2ICaKOTvrZTCObQbsfp4UbDqQyGISCZfGN&source=gbs_api"
+        },
+        shelf: "currentlyReading"
+      } 
+      const shelve =  {name: 'Sample Shelf', title:'Sample Shelf title', books:[book]}
+      
+      bookShelves.set('Sample Shelf', shelve);
+      const {getByText, getByPlaceholderText } =  render(
+        <BrowserRouter>
+          <BookStructureManager 
+            bookShelves={bookShelves}
+            bookStorage={bookStorage}
+            render={(bookShelves, changeShelf, extractShelvesNames)=> (
+              <div> 
+                <BookSearcher
+                    shelves={bookShelves}
+                    availableActions={extractShelvesNames(bookShelves)}
+                    changeShelf={changeShelf}
+                />
+              </div>
+            )}/>
+        </BrowserRouter>);
+        expect(getByPlaceholderText("Search by title or author, min 3 chars")).toBeEmpty();
 
-    
+        const input = getByPlaceholderText("Search by title or author, min 3 chars");
+        input.value = 'Ender';
+        fireEvent.change(input);
+      })
   })
 
 })
