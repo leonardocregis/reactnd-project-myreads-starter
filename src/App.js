@@ -4,7 +4,6 @@ import {Route} from 'react-router-dom';
 import './styles/App.css';
 import BookSearcher from './components/book/BookSearcher';
 import BookStructureManager from './BookStructureManager';
-import 'jest-dom/extend-expect'
 
 class BooksApp extends React.Component {
   constructor(props) {
