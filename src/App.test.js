@@ -10,6 +10,8 @@ import BookStructureManager from './BookStructureManager';
 import {render, cleanup, fireEvent, waitForElement} from 'react-testing-library'
 import BookWardrobe from './components/wardrobe/BookWardrobe';
 import BookSearcher from './components/book/BookSearcher';
+import 'jest-dom/extend-expect'
+
 /** 
  This course is not designed to teach Test Driven Development. 
  Feel free to use this file to test your application, but it 
