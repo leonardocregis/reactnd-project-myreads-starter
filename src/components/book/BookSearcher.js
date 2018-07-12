@@ -12,19 +12,24 @@ class BookSearcher  extends React.Component {
     loading: false
   }
 
+  fetchingPromises = [];
+
   updateQuery = (query) => {
     this.setState({query});
     if (query.length > 2) {
       this.setState({loading: true});
-      BooksAPI.search(query).then(books => {
+      let promise = BooksAPI.search(query);
+      this.fetchingPromises.push(promise);
+      promise.then(books => {
         this.setState({bookList: books, loading: false});
       }).catch( err => {
-        console.error(err);
         this.setState({loading: false, error: err});
       });  
     }
   }
-
+  componentWillUnmount() {
+    this.fetchingPromises.forEach(promise => promise.cancel());
+  }
   clearQuery = () => {
     this.setState(
         {
