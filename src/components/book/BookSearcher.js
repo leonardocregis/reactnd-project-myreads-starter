@@ -9,33 +9,37 @@ class BookSearcher  extends React.Component {
   state = {
     query: '',
     bookList: [],
-    loading: false
+    loading: false,
   }
 
-  fetchingPromise = undefined;
+  cancelFetch = undefined;
 
   updateQuery = (query) => {
     this.setState({query});
     if (query.length > 2) {
       this.setState({loading: true});
       let promise = makeCancelable(BooksAPI.search(query),
-        books => { this.setState({bookList: books, loading: false})}, 
+        books => {
+          this.setState({bookList: books, loading: false})
+        }, 
         err => {
-
-          this.setState({loading: false, error: err});
+          if (!err.isCanceled) {
+            this.setState({loading: false, error: err});
+          }
         }
       );
-      this.fetchingPromises = promise;
+      this.cancelFetch = promise;
     }
   }
-
   componentDidUpdate() {
-    this.fetchingPromise = undefined;
+    if (!this.state.loading) {
+      this.cancelFetch = undefined;
+    }
   }
-
   componentWillUnmount() {
-    if (this.fetchingPromise)
-      this.fetchingPromises.cancel();
+    if (this.cancelFetch) {
+      this.cancelFetch();
+    }
   }
   clearQuery = () => {
     this.setState(
