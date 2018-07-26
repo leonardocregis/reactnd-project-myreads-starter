@@ -157,6 +157,7 @@ describe ('Testing React Components', () => {
     it('book search has books', async ()=> {
       //Arrange
       const book = {
+        id:"12345",
         title: "Ender's Game",
         authors: "Orson Scott Card",
         imageLinks: {
@@ -165,9 +166,14 @@ describe ('Testing React Components', () => {
         shelf: "currentlyReading"
       } 
       const shelve =  {name: 'Sample Shelf', title:'Sample Shelf title', books:[book]}
-      
+      const bookApi = {
+        search: (query) => {
+          const p = new Promise(resolve => resolve([book]));
+          return p;
+        }
+      }
       bookShelves.set('Sample Shelf', shelve);
-      const {getByText, getByPlaceholderText, container } =  render(
+      const {getByPlaceholderText, getByText } =  render(
         <BrowserRouter>
           <BookStructureManager 
             bookShelves={bookShelves}
@@ -178,23 +184,30 @@ describe ('Testing React Components', () => {
                     shelves={bookShelves}
                     availableActions={extractShelvesNames(bookShelves)}
                     changeShelf={changeShelf}
+                    booksApi={bookApi}
                 />
               </div>
             )}/>
         </BrowserRouter>);
         expect(getByPlaceholderText("Search by title or author, min 3 chars")).toBeEmpty();
+        expect(getByText("No Results")).not.toBeEmpty();
 
         const input = getByPlaceholderText("Search by title or author, min 3 chars");
+        
         input.value = 'Ender';
 
         //Act
         fireEvent.change(input);
+        const partial = getByPlaceholderText("Search by title or author, min 3 chars");
+        expect(partial.value).toEqual('Ender');
+        expect(getByText("Loading...")).not.toBeEmpty();
 
         //Assert
         const result = await  waitForElement(() =>
-          getByPlaceholderText("Search by title or author, min 3 chars")
+          getByText('Sample Shelf title')
         );
-        expect(result.value).toEqual('Ender');
+        expect(result).not.toBeEmpty();
+        expect(getByText('Orson Scott Card')).not.toBeEmpty();
       })
   })
 
