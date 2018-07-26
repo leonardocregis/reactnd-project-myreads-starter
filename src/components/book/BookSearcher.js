@@ -23,8 +23,9 @@ class BookSearcher  extends React.Component {
       this.setState({loading: true});
       let promise = makeCancelable(this.booksApi.search(query),
         books => {
-          console.log(books);
-          this.setState({bookList: books, loading: false})
+           if (!books.isCanceled) {
+            this.setState({bookList: books, loading: false})
+          }
         }, 
         err => {
           if (!err.isCanceled) {
@@ -36,7 +37,6 @@ class BookSearcher  extends React.Component {
     }
   }
   componentDidUpdate() {
-    console.log(this.state);
     if (!this.state.loading) {
       this.cancelFetch = undefined;
     }
@@ -111,7 +111,6 @@ class BookSearcher  extends React.Component {
   render() {
       const {query, bookList, loading} = this.state;
       const {availableActions} = this.props;
-
       return (
         <div data-testid="book-searcher" className="search-books">
         <div className="search-books-bar">
