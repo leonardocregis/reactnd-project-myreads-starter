@@ -1,6 +1,5 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import * as BooksAPI from '../../api/BooksAPI'
 import BookItem from './BookItem';
 import makeCancelable from 'makecancelable';
 
@@ -11,15 +10,20 @@ class BookSearcher  extends React.Component {
     bookList: [],
     loading: false,
   }
-
+  
+  constructor(props) {
+    super(props);
+    this.booksApi = props.booksApi;
+  }
   cancelFetch = undefined;
 
   updateQuery = (query) => {
     this.setState({query});
     if (query.length > 2) {
       this.setState({loading: true});
-      let promise = makeCancelable(BooksAPI.search(query),
+      let promise = makeCancelable(this.booksApi.search(query),
         books => {
+          console.log(books);
           this.setState({bookList: books, loading: false})
         }, 
         err => {
@@ -32,6 +36,7 @@ class BookSearcher  extends React.Component {
     }
   }
   componentDidUpdate() {
+    console.log(this.state);
     if (!this.state.loading) {
       this.cancelFetch = undefined;
     }

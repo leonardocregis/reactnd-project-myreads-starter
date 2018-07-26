@@ -4,6 +4,7 @@ import {Route} from 'react-router-dom';
 import './styles/App.css';
 import BookSearcher from './components/book/BookSearcher';
 import BookStructureManager from './BookStructureManager';
+import * as BooksAPI from './api/BooksAPI'
 
 class BooksApp extends React.Component {
   constructor(props) {
@@ -31,6 +32,7 @@ class BooksApp extends React.Component {
                 shelves={bookShelves}
                 availableActions={extractShelvesNames(bookShelves)}
                 changeShelf={changeShelf}
+                bookApi={BooksAPI}
               />
             )}/>
             <Route exact path="/" render={() =>(
