@@ -5,4 +5,5 @@ package-lock.json
 .idea/
 coverage/
 build/
+.vscode/
 
