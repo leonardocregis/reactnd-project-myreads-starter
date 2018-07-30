@@ -122,6 +122,7 @@ class BookStorage {
                       } else {
                         throw new Error('No shelfs found');
                       }
+                      resolve(shelfMap);
                     }).catch(err => reject(err));
                   }
                 );
