@@ -78,7 +78,7 @@ class BookStorage {
       throw new Error(`Update failed for book ${book.name}, missing id`)
     }
     BooksAPI.update(book, shelf.name).then(() => {
-
+      console.log(`Book ${book.name} successfully saved into shelf ${shelf.name}`)
     }).catch(err => {
       console.error(`Unable to update remote books: ${err}`);
       throw new Error(`Unable to update remote books`);
