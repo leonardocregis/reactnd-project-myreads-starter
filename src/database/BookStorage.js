@@ -77,10 +77,11 @@ class BookStorage {
     if (book.id) {
       throw new Error(`Update failed for book ${book.name}, missing id`)
     }
-    BooksAPI.update(book, shelf).then(() => {
+    BooksAPI.update(book, shelf.name).then(() => {
 
     }).catch(err => {
-      
+      console.error(`Unable to update remote books: ${err}`);
+      throw new Error(`Unable to update remote books`);
     });
   }
   /**
