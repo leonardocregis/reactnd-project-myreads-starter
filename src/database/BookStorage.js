@@ -68,12 +68,15 @@ class BookStorage {
   }
 
   /**
+   * Book needs to have the id to work with the updating for the remote
    * 
    * @param {Book} book 
    * @param {Shelf} shelf 
    */
   updateRemoteBook(book, shelf){
-    //TODO create the behavior for updating remote
+    if (book.id) {
+      throw new Error(`Update failed for book ${book.name}, missing id`)
+    }
     BooksAPI.update(book, shelf).then(() => {
 
     }).catch(err => {
