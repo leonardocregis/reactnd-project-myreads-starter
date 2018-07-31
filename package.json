@@ -22,7 +22,7 @@
   },
   "name": "books-stars-sharing",
   "description": "Booking sharing app, let you put your opinion onto books and share them",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "main": "index.js",
   "repository": {
     "type": "git",
