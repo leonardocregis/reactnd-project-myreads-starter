@@ -97,7 +97,7 @@ class BookStorage {
   loadFromDb() {
     return new Promise( (resolve, reject) => {
         let db = this.bookShelveDb;
-        let shelfMap = this.defaultBookShelves.loadDefaultShelves();
+        let shelfMap = this.defaultBookShelves.loadShelfModel();
         db.open(this.storageName)
           .then(() => {
               BooksAPI.getAll().then( books => {

@@ -8,7 +8,7 @@ class DefaultBookShelves {
      */
     buildFullDefaultShelf() {
 
-        let defaultBookShelve = this.loadDefaultShelves();
+        let defaultBookShelve = this.loadShelfModel();
         const books = this.loadDefaultBooks()
 
         books.forEach( book => {
@@ -20,7 +20,7 @@ class DefaultBookShelves {
     /**
      * Load local configuration of shelfs.
     */
-    loadDefaultShelves() {
+    loadShelfModel() {
         const shelves = [
             {
                 name: 'none',
