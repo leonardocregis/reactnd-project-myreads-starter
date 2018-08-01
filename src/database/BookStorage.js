@@ -96,6 +96,27 @@ class BookStorage {
    */
   loadFromDb() {
     return new Promise( (resolve, reject) => {
+        function loadLocalShelfs(fetcherFn, shelfMap, resolverFn, rejecterFn) {
+          fetcherFn().then( shelfs => {
+            if (shelfs) {
+              shelfs.forEach( (shelf, key) => {
+                if (shelf) {
+                  let auxShelf = shelfMap.get(shelf.name);
+                  if (!auxShelf) {
+                    console.error(shelfs);
+                    console.warn(`Not found into shelfMap for the key ${shelf.shelf}`)
+                  }
+                  auxShelf.books = shelf.value.books;                              
+                } else {
+                  console.warn(`chelf Key[${key}] shouldnt have values undefined `);
+                }
+              });  
+            } else {
+              throw new Error('No shelfs found');
+            }
+            resolverFn(shelfMap);
+          }).catch(err => rejecterFn(err));
+        }
         let db = this.bookShelveDb;
         let shelfMap = this.defaultBookShelves.loadShelfModel();
         db.open(this.storageName)
@@ -109,25 +130,7 @@ class BookStorage {
                 resolve(shelfMap);
               }).catch( err => 
                   {
-                    this.fetchStoredShelfs().then( shelfs => {
-                      if (shelfs) {
-                        shelfs.forEach( (shelf, key) => {
-                          if (shelf) {
-                            let auxShelf = shelfMap.get(shelf.name);
-                            if (!auxShelf) {
-                              console.error(shelfs);
-                              console.warn(`Not found into shelfMap for the key ${shelf.shelf}`)
-                            }
-                            auxShelf.books = shelf.value.books;                              
-                          } else {
-                            console.warn(`chelf Key[${key}] shouldnt have values undefined `);
-                          }
-                        });  
-                      } else {
-                        throw new Error('No shelfs found');
-                      }
-                      resolve(shelfMap);
-                    }).catch(err => reject(err));
+                    loadLocalShelfs(this.fetchLocalShelfs.bind(this), shelfMap, resolve, reject);
                   }
                 );
             }
@@ -142,7 +145,7 @@ class BookStorage {
   /**
    * Seek from the 3 types of shelfs from some persitence : reading, wantToRead, read  the values that are saved.
    */
-  fetchStoredShelfs() {
+  fetchLocalShelfs() {
     return new Promise( (resolve, reject) => {
       let readingPromise = this.bookShelveDb.fetchData('currentlyReading');
       let wantToReadPromise = this.bookShelveDb.fetchData('wantToRead');
