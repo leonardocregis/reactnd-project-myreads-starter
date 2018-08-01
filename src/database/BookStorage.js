@@ -117,26 +117,44 @@ class BookStorage {
             resolverFn(shelfMap);
           }).catch(err => rejecterFn(err));
         }
+        function isShelfMapFilled(shelfMap) {
+          shelfMap.forEach(value => {
+            if (value) return true;
+          })
+        }
         let db = this.bookShelveDb;
         let shelfMap = this.defaultBookShelves.loadShelfModel();
         db.open(this.storageName)
           .then(() => {
-              BooksAPI.getAll().then( books => {
-                books.forEach(book => {
-                  let shelf = shelfMap.get(book.shelf);
-                  shelf.books.push(book);
-                  this.updateBookList(book.shelf, shelf);
-                });
-                resolve(shelfMap);
-              }).catch( err => 
-                  {
-                    loadLocalShelfs(this.fetchLocalShelfs.bind(this), shelfMap, resolve, reject);
+              loadLocalShelfs(this.fetchLocalShelfs.bind(this), shelfMap, result => {
+                  if (!isShelfMapFilled(result)){
+                    resolve(shelfMap);
+                  } else {
+                    BooksAPI.getAll().then( books => {
+                      books.forEach(book => {
+                        let shelf = shelfMap.get(book.shelf);
+                        shelf.books.push(book);
+                        this.updateBookList(book.shelf, shelf);
+                      });
+                      resolve(shelfMap);
+                    }).catch( err => reject("Error Loading both remote as local") );
                   }
-                );
+                },
+                err => {
+                    BooksAPI.getAll().then( books => {
+                      books.forEach(book => {
+                        let shelf = shelfMap.get(book.shelf);
+                        shelf.books.push(book);
+                        this.updateBookList(book.shelf, shelf);
+                      });
+                      resolve(shelfMap);
+                    }).catch( err => reject("Error Loading both remote as local") );
+                }
+              )
             }
           ).catch(err => {
               console.error('warning creating db wasnt possible', err);
-              resolve(this.buildFullDefaultShelf());
+              reject();
             }
           );
     });
