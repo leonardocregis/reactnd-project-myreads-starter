@@ -10,6 +10,8 @@ To get started developing right away:
 
 * install all project dependencies with `npm install`
 * start the development server with `npm start`
+* if you want to test just run `npm test`
+* to see the coverage `npm test -- --coverage`, greather than 80%
 
 ## What You're Getting
 ```bash
@@ -17,23 +19,35 @@ To get started developing right away:
 ├── README.md - This file.
 ├── SEARCH_TERMS.md # The whitelisted short collection of available search terms for you to use with your app.
 ├── package.json # npm package manager file. It's unlikely that you'll need to modify this.
-├── public
+├── public #public static repository
 │   ├── favicon.ico # React Icon, You may change if you wish.
 │   └── index.html # DO NOT MODIFY
 └── src
     ├── App.css # Styles for your app. Feel free to customize this as you desire.
     ├── App.js # This is the root of your app. Contains static HTML right now.
-    ├── App.test.js # Used for testing. Provided with Create React App. Testing is encouraged, but not required.
-    ├── BooksAPI.js # A JavaScript API for the provided Udacity backend. Instructions for the methods are below.
+    ├── App.test.js # Used for testing, coverage of 80% or more see the topic about the commands
+    ├── api #folder to hold all the api used by app, rigth now just the api to call the persistence
+        ├── BooksAPI.js # A JavaScript API for the provided Udacity backend. Instructions for the methods are below.
     ├── icons # Helpful images for your app. Use at your discretion.
     │   ├── add.svg
     │   ├── arrow-back.svg
     │   └── arrow-drop-down.svg
+    ├── components #React components holder
+    │   ├── book #Boor related components
+    │   │   ├── BookActionsManager.js #
+    │   │   ├── BookItem.js #The view related stuff for the book item
+    │   │   ├── BookSearchers.js #The component that deal with searching books into the api
+    │   │   └── BookUtils.js #Usefull functions used onto the other components
+    │   ├── shelf #shelf related api, in the hierarchy its a intermediary one
+    │   │   └── BookShelf.js # Manages the behavior and view of the shelf            
+    │   └── wardrobe #shelf related api, in the hierarchy its the top one
+    │   │   └── BookWardrobe.js # General view the holder of all the shelves
     ├── index.css # Global styles. You probably won't need to change anything here.
+    ├── BookStructureManager.js #Holds the behavior for the components
+    ├── setupTests.js #Setup the tests
     └── index.js # You should not need to modify this file. It is used for DOM rendering only.
-```
 
-Remember that good React design practice is to create new JS files for each component and use import/require statements to include them where they are needed.
+```
 
 ## Backend Server
 
