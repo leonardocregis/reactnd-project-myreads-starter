@@ -106,7 +106,8 @@ class BookStorage {
                     console.error(shelfs);
                     console.warn(`Not found into shelfMap for the key ${shelf.shelf}`)
                   }
-                  auxShelf.books = shelf.value.books;                              
+                  auxShelf.books = shelf.value.books;
+                  auxShelf.synchronized = true;                        
                 } else {
                   console.warn(`chelf Key[${key}] shouldnt have values undefined `);
                 }
@@ -118,16 +119,20 @@ class BookStorage {
           }).catch(err => rejecterFn(err));
         }
         function isShelfMapFilled(shelfMap) {
-          shelfMap.forEach(value => {
-            if (value) return true;
-          })
+          let hasLoadedValues = false;
+          shelfMap.forEach(shelf => {
+            if (shelf) {
+              hasLoadedValues = hasLoadedValues || shelf.synchronized;
+            }
+          });
+          return hasLoadedValues;
         }
         let db = this.bookShelveDb;
         let shelfMap = this.defaultBookShelves.loadShelfModel();
         db.open(this.storageName)
           .then(() => {
               loadLocalShelfs(this.fetchLocalShelfs.bind(this), shelfMap, result => {
-                  if (!isShelfMapFilled(result)){
+                  if (isShelfMapFilled(result)){
                     resolve(shelfMap);
                   } else {
                     BooksAPI.getAll().then( books => {
