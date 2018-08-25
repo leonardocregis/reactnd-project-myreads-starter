@@ -73,8 +73,8 @@ class BookStructureManager extends React.Component {
         shelfBooksDestiny.books.unshift(book);
         bookShelves.set(toShelf, shelfBooksDestiny);
   
-        this.persistBooks(fromShelf, shelfBooksDestiny, toShelf, shelfBooksOrigin);
-  
+        this.persistBooksLocal(fromShelf, shelfBooksDestiny, toShelf, shelfBooksOrigin);
+        this.persistBookRemote(book);
         const newState = bookShelves;
         this.setState({bookShelves: newState});      
       } else {
@@ -82,7 +82,11 @@ class BookStructureManager extends React.Component {
       }
     }
   
-    persistBooks(fromShelf, shelfBooksDestiny, toShelf, shelfBooksOrigin ) {
+    persistBookRemote(book) {
+      this.bookStorage.updateRemoteBook(book, book.shelf);
+    }
+
+    persistBooksLocal(fromShelf, shelfBooksDestiny, toShelf, shelfBooksOrigin ) {
       let updates = [];
       if (fromShelf){
           updates.push(this.bookStorage.updateBookList(fromShelf, shelfBooksOrigin));
@@ -90,7 +94,7 @@ class BookStructureManager extends React.Component {
       updates.push(this.bookStorage.updateBookList(toShelf, shelfBooksDestiny));
       if (updates.length > 0) {
         Promise.all(updates)
-          .then( data => console.log(`saved with sucess ${data}`))
+          .then( data => console.log(`saved locally with sucess ${data}`))
           .catch( err=> console.error(err));
       }
     }

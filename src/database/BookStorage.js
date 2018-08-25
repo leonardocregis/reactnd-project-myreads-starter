@@ -68,16 +68,20 @@ class BookStorage {
   }
 
   /**
+   * Book needs to have the id to work with the updating for the remote
    * 
    * @param {Book} book 
    * @param {Shelf} shelf 
    */
   updateRemoteBook(book, shelf){
-    //TODO create the behavior for updating remote
-    BooksAPI.update(book, shelf).then(() => {
-
+    if (!book.id) {
+      throw new Error(`Update failed for book ${book.name}, missing id`)
+    }
+    BooksAPI.update(book, shelf.name).then(() => {
+      console.log(`Book ${book.name} successfully saved into shelf ${shelf.name}`)
     }).catch(err => {
-      
+      console.error(`Unable to update remote books: ${err}`);
+      throw new Error(`Unable to update remote books`);
     });
   }
   /**
@@ -92,43 +96,70 @@ class BookStorage {
    */
   loadFromDb() {
     return new Promise( (resolve, reject) => {
+        function loadLocalShelfs(fetcherFn, shelfMap, resolverFn, rejecterFn) {
+          fetcherFn().then( shelfs => {
+            if (shelfs) {
+              shelfs.forEach( (shelf, key) => {
+                if (shelf) {
+                  let auxShelf = shelfMap.get(shelf.name);
+                  if (!auxShelf) {
+                    console.error(shelfs);
+                    console.warn(`Not found into shelfMap for the key ${shelf.shelf}`)
+                  }
+                  auxShelf.books = shelf.value.books;
+                  auxShelf.synchronized = true;                        
+                } else {
+                  console.warn(`chelf Key[${key}] shouldnt have values undefined `);
+                }
+              });  
+            } else {
+              throw new Error('No shelfs found');
+            }
+            resolverFn(shelfMap);
+          }).catch(err => rejecterFn(err));
+        }
+        function isShelfMapFilled(shelfMap) {
+          let hasLoadedValues = false;
+          shelfMap.forEach(shelf => {
+            if (shelf) {
+              hasLoadedValues = hasLoadedValues || shelf.synchronized;
+            }
+          });
+          return hasLoadedValues;
+        }
         let db = this.bookShelveDb;
-        let shelfMap = this.defaultBookShelves.loadDefaultShelves();
+        let shelfMap = this.defaultBookShelves.loadShelfModel();
         db.open(this.storageName)
           .then(() => {
-              BooksAPI.getAll().then( books => {
-                books.forEach(book => {
-                  let shelf = shelfMap.get(book.shelf);
-                  shelf.books.push(book);
-                  this.updateBookList(book.shelf, shelf);
-                });
-                resolve(shelfMap);
-              }).catch( err => 
-                  {
-                    this.fetchStoredShelfs().then( shelfs => {
-                      if (shelfs) {
-                        shelfs.forEach( (shelf, key) => {
-                          if (shelf) {
-                            let auxShelf = shelfMap.get(shelf.name);
-                            if (!auxShelf) {
-                              console.error(shelfs);
-                              console.warn(`Not found into shelfMap for the key ${shelf.shelf}`)
-                            }
-                            auxShelf.books = shelf.value.books;                              
-                          } else {
-                            console.warn(`chelf Key[${key}] shouldnt have values undefined `);
-                          }
-                        });  
-                      } else {
-                        throw new Error('No shelfs found');
-                      }
-                    }).catch(err => reject(err));
+              loadLocalShelfs(this.fetchLocalShelfs.bind(this), shelfMap, result => {
+                  if (isShelfMapFilled(result)){
+                    resolve(shelfMap);
+                  } else {
+                    BooksAPI.getAll().then( books => {
+                      books.forEach(book => {
+                        let shelf = shelfMap.get(book.shelf);
+                        shelf.books.push(book);
+                        this.updateBookList(book.shelf, shelf);
+                      });
+                      resolve(shelfMap);
+                    }).catch( err => reject("Error Loading both remote as local") );
                   }
-                );
+                },
+                err => {
+                    BooksAPI.getAll().then( books => {
+                      books.forEach(book => {
+                        let shelf = shelfMap.get(book.shelf);
+                        shelf.books.push(book);
+                        this.updateBookList(book.shelf, shelf);
+                      });
+                      resolve(shelfMap);
+                    }).catch( err => reject("Error Loading both remote as local") );
+                }
+              )
             }
           ).catch(err => {
               console.error('warning creating db wasnt possible', err);
-              resolve(this.buildFullDefaultShelf());
+              reject();
             }
           );
     });
@@ -137,7 +168,7 @@ class BookStorage {
   /**
    * Seek from the 3 types of shelfs from some persitence : reading, wantToRead, read  the values that are saved.
    */
-  fetchStoredShelfs() {
+  fetchLocalShelfs() {
     return new Promise( (resolve, reject) => {
       let readingPromise = this.bookShelveDb.fetchData('currentlyReading');
       let wantToReadPromise = this.bookShelveDb.fetchData('wantToRead');

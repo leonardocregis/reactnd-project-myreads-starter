@@ -13,7 +13,7 @@ class BookSearcher  extends React.Component {
   
   constructor(props) {
     super(props);
-    this.booksApi = props.booksApi;
+    this.bookApi = props.bookApi;
   }
   cancelFetch = undefined;
 
@@ -21,7 +21,7 @@ class BookSearcher  extends React.Component {
     this.setState({query});
     if (query.length > 2) {
       this.setState({loading: true});
-      let promise = makeCancelable(this.booksApi.search(query),
+      let promise = makeCancelable(this.bookApi.search(query),
         books => {
            if (!books.isCanceled) {
             this.setState({bookList: books, loading: false})
