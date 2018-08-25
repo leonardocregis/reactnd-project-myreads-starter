@@ -75,7 +75,7 @@ class BookStructureManager extends React.Component {
   
         this.persistBooksLocal(fromShelf, shelfBooksDestiny, toShelf, shelfBooksOrigin);
         this.persistBookRemote(book);
-        const newState = bookShelves;
+        const newState = new Map(bookShelves);
         this.setState({bookShelves: newState});      
       } else {
         throw new Error(`non existing configuration for: ${toShelf}`);
