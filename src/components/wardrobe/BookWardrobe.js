@@ -8,7 +8,7 @@ import BookUtils from '../book/BookUtils';
  * shelfes: Map of { name:<string>, title:<string>, books:[<book>]}
  * title: <string>
  */
-class  BookWardrobe extends React.Component {
+class  BookWardrobe extends React.PureComponent {
 
     render() {
         let shelves = [];
