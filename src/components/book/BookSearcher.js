@@ -53,7 +53,19 @@ class BookSearcher  extends React.Component {
     );
   }
 
-
+  adaptMissingData(book) {
+    if (book.imageLinks) {
+      if (book.imageLinks.thumbnail) {
+        return book;
+      } else {
+        book.imageLinks = { thumbnail:""}
+        return book;
+      }
+    } else {
+        book.imageLinks = { thumbnail:""}
+        return book;
+    }
+  }
   renderBookList(searchedBooks,availableActions) {
     const {shelves, changeShelf} = this.props;
     const recordedBooks = this.mapToBookList(shelves);
@@ -75,7 +87,7 @@ class BookSearcher  extends React.Component {
             return (
                 <li key={book.id} data-testid="book-searcher">
                   <BookItem
-                    imageURL={book.imageLinks.thumbnail}
+                    imageURL={this.adaptMissingData(book).imageLinks.thumbnail}
                     book={book}
                     availableActions={actions}
                     changeShelf={changeShelf}
