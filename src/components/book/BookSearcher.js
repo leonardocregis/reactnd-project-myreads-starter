@@ -4,7 +4,6 @@ import BookItem from './BookItem';
 import makeCancelable from 'makecancelable';
 import {Debounce} from 'react-throttle';
 
-
 class BookSearcher  extends React.Component {
 
   state = {
@@ -66,8 +65,13 @@ class BookSearcher  extends React.Component {
             const alreadySavedBook = recordedBooks.get(book.id);
             if (alreadySavedBook) {
               book.shelf = alreadySavedBook.shelf;
-            }
-            const actions = availableActions.filter(action => book.shelf !== action.name);
+            }           
+            const actions = availableActions.map(action => {
+              if (action.name === book.shelf) {
+                  action.used = true;
+              }
+              return action;
+            });
             return (
                 <li key={book.id} data-testid="book-searcher">
                   <BookItem
