@@ -21,7 +21,7 @@ class BookShelf extends React.Component {
 
   renderShelf(shelf, availableActions) {
     return (<div className="bookshelf" data-testid="book-shelf">
-      <h2 className="bookshelf-title">{shelf.title}</h2>
+      <h2 className="bookshelf-title">{shelf.title === 'none'? '' : shelf.title}</h2>
       <div className="bookshelf-books">
         <ol className="books-grid">
           {shelf.books && shelf.books.map(book => {
