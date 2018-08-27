@@ -20,7 +20,11 @@ class BookActionsManager extends React.Component {
                 <option value="none" >Move to...</option>
                 {
                     actions && actions.map((action,index) => {
-                     return (<option key={index} value={action.name}>{action.text}</option>)
+                        if (action.used) {
+                            return (<option disabled key={index} value={action.name}>{action.text}</option>)
+                        } else {
+                            return (<option key={index} value={action.name}>{action.text}</option>)
+                        }
                     })
                 }
             </select>

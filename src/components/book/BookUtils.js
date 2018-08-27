@@ -5,11 +5,16 @@ class BookUtils {
     }
 
     filterAction = (shelfName) => {
-        return this.convertShelfActions().filter(action => action.name !== shelfName);
+        return this.convertShelfActions().map(action => {
+            if (action.name === shelfName) {
+                action.used = true;
+            }
+            return action;
+        });
     }
 
     convertShelfActions() {
-        return this.shelves.map(shelve => { return {name: shelve.name, text:shelve.title}});
+        return this.shelves.map(shelve => { return {name: shelve.name, text:shelve.title, used:false}});
     }
 
 }
