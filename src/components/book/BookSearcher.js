@@ -2,6 +2,8 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import BookItem from './BookItem';
 import makeCancelable from 'makecancelable';
+import {Debounce} from 'react-throttle';
+
 
 class BookSearcher  extends React.Component {
 
@@ -19,22 +21,20 @@ class BookSearcher  extends React.Component {
 
   updateQuery = (query) => {
     this.setState({query});
-    if (query.length > 2) {
-      this.setState({loading: true});
-      let promise = makeCancelable(this.bookApi.search(query),
-        books => {
-           if (!books.isCanceled) {
-            this.setState({bookList: books, loading: false})
-          }
-        }, 
-        err => {
-          if (!err.isCanceled) {
-            this.setState({loading: false, error: err});
-          }
+    this.setState({loading: true});
+    let promise = makeCancelable(this.bookApi.search(query),
+      books => {
+          if (!books.isCanceled) {
+          this.setState({bookList: books, loading: false})
         }
-      );
-      this.cancelFetch = promise;
-    }
+      }, 
+      err => {
+        if (!err.isCanceled) {
+          this.setState({loading: false, error: err});
+        }
+      }
+    );
+    this.cancelFetch = promise;
   }
   componentDidUpdate() {
     if (!this.state.loading) {
@@ -128,13 +128,13 @@ class BookSearcher  extends React.Component {
               However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
               you don't find a specific author or title. Every search is limited by search terms.
             */}
-            <input 
-              type="text"
-              placeholder="Search by title or author, min 3 chars"
-              value={query}
-              onChange={(event) => this.updateQuery(event.target.value)}
-            />
-
+            <Debounce time="400" handler="onChange">
+              <input 
+                type="text"
+                placeholder="Search by title or author, min 3 chars"
+                onChange={(event) => this.updateQuery(event.target.value)}
+              />
+            </Debounce>
           </div>
         </div>
         <div className="search-books-results">
