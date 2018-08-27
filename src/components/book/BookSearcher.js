@@ -109,7 +109,7 @@ class BookSearcher  extends React.Component {
   }
 
   render() {
-      const {query, bookList, loading} = this.state;
+      const {bookList, loading} = this.state;
       const {availableActions} = this.props;
       return (
         <div data-testid="book-searcher" className="search-books">
