@@ -77,13 +77,20 @@ class BookSearcher  extends React.Component {
             const alreadySavedBook = recordedBooks.get(book.id);
             if (alreadySavedBook) {
               book.shelf = alreadySavedBook.shelf;
-            }           
-            const actions = availableActions.map(action => {
-              if (action.name === book.shelf) {
-                  action.used = true;
+            }
+            let auxAvailableActions = availableActions.slice();
+            let actionMapped = false;
+            const actions = auxAvailableActions.map(action => {
+              let auxAction = Object.assign({}, action);
+              if (auxAction.name === book.shelf) {
+                  auxAction.used = true;
+                  actionMapped = true;
               }
-              return action;
+              return auxAction;
             });
+            if (!actionMapped) {
+              actions[0].used = true;
+            }
             return (
                 <li key={book.id} data-testid="book-searcher">
                   <BookItem
